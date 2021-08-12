@@ -17,12 +17,7 @@ public class Customers {
     private int countryID;
     private String country;
 
-    public Customers() {
-        customerID = -1;
-    }
-
-    public Customers(int customerID, String customerName, String address, String postalCode, String phone, LocalDateTime createDate, String createdBy, LocalDateTime lastUpdate, String lastUpdatedBy,
-                     int divisionID, String division, int countryID, String country) {
+    public Customers(int customerID, String customerName, String address, String postalCode, String country, String phone, int divisionID) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.address = address;

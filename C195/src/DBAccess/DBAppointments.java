@@ -4,7 +4,6 @@ import Model.Appointments;
 import Utilities.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,10 +30,12 @@ public class DBAppointments {
                 String title = rs.getString("Title");
                 String description = rs.getString("Description");
                 String location = rs.getString("Location");
+                String contact = rs.getString("Contact_Name");
                 String type = rs.getString("Type");
                 LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
                 LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
-                LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
+                int customerID = rs.getInt("Customer_ID");
+                /*LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
                 String createdBy = rs.getString("Created_By");
                 Timestamp lastUpdate = rs.getTimestamp("Last_Update");
                 String lastUpdatedBy = rs.getString("Last_Updated_By");
@@ -43,9 +44,9 @@ public class DBAppointments {
                 int contactID = rs.getInt("Contact_ID");
                 String customerName = rs.getString("Customer_Name");
                 String userName = rs.getString("User_Name");
-                String contactName = rs.getString("Contact_Name");
+                String contactName = rs.getString("Contact_Name");*/
 
-                Appointments A = new Appointments(appointmentID, title, description, location, type, start, end, createDate, createdBy, lastUpdate, lastUpdatedBy, customerID, userID, contactID, customerName, userName, contactName);
+                Appointments A = new Appointments(appointmentID, title, description, location, contact, type, start, end, customerID);
                 alist.add(A);
             }
         } catch (SQLException throwables) {

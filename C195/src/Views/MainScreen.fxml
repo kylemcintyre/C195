@@ -22,7 +22,7 @@
             <TableColumn fx:id="customerDivisionCol" prefWidth="128.0" text="Division" />
          </columns>
       </TableView>
-      <TableView fx:id="appointmentTable" layoutX="47.0" layoutY="592.0" prefHeight="300.0" prefWidth="900.0">
+      <TableView fx:id="appointmentsTable" layoutX="47.0" layoutY="592.0" prefHeight="300.0" prefWidth="900.0">
         <columns>
           <TableColumn fx:id="appointmentIDCol" prefWidth="100.0" text="Appointment ID" />
           <TableColumn fx:id="appointmentTitleCol" prefWidth="100.0" text="Title" />

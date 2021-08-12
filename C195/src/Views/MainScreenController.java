@@ -2,6 +2,7 @@ package Views;
 
 import DBAccess.DBAppointments;
 import DBAccess.DBCountries;
+import DBAccess.DBCustomers;
 import Model.Appointments;
 import Model.Countries;
 import Model.Customers;
@@ -21,23 +22,66 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class MainScreenController {
+public class MainScreenController implements Initializable {
 
     @FXML
     private TableView<Customers> customerTable;
 
     @FXML
-    private TableColumn customerIDCol, customerNameCol, customerAddressCol, customerPostalCol, customerCountryCol, customerPhoneCol, customerDivisionCol;
+    private TableColumn<Customers, Integer> customerIDCol;
+
+    @FXML
+    private TableColumn<Customers, String> customerNameCol;
+
+    @FXML
+    private TableColumn<Customers, String> customerAddressCol;
+
+    @FXML
+    private TableColumn<Customers, String> customerPostalCol;
+
+    @FXML
+    private TableColumn<Customers, String> customerCountryCol;
+
+    @FXML
+    private TableColumn<Customers, String> customerPhoneCol;
+
+    @FXML
+    private TableColumn<Customers, Integer> customerDivisionCol;
 
     @FXML
     private TableView<Appointments> appointmentsTable;
 
     @FXML
-    private TableColumn<?, ?> appointmentIDCol, appointmentTitleCol, appointmentDescriptionCol, appointmentLocationCol, appointmentContactCol, appointmentTypeCol, appointmentStartCol, appointmentEndCol, appointmentCustomerIDCol;
+    private TableColumn<Appointments, Integer> appointmentIDCol;
+
+    @FXML
+    private TableColumn<Appointments, String> appointmentTitleCol;
+
+    @FXML
+    private TableColumn<Appointments, String> appointmentDescriptionCol;
+
+    @FXML
+    private TableColumn<Appointments, String> appointmentLocationCol;
+
+    @FXML
+    private TableColumn<Appointments, String> appointmentContactCol;
+
+    @FXML
+    private TableColumn<Appointments, String> appointmentTypeCol;
+
+    @FXML
+    private TableColumn<Appointments, LocalDateTime> appointmentStartCol;
+
+    @FXML
+    private TableColumn<Appointments, LocalDateTime> appointmentEndCol;
+
+    @FXML
+    private TableColumn<Appointments, Integer> appointmentCustomerIDCol;
 
     @FXML
     private Button addCustomerButton;
@@ -78,36 +122,39 @@ public class MainScreenController {
     @FXML
     private RadioButton weeklyAppointmentsRadio;
 
-    /* @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        appointmentIDCol.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
-        appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        appointmentDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-        appointmentLocationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
-        appointmentContactCol.setCellValueFactory(new PropertyValueFactory<>("contactID"));
-        appointmentTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-        appointmentStartCol.setCellValueFactory(new PropertyValueFactory<>("start"));
-        appointmentEndCol.setCellValueFactory(new PropertyValueFactory<>("end"));
-        appointmentCustomerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        // set columns and values for appointsments table
+        appointmentIDCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("appointmentID"));
+        appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("title"));
+        appointmentDescriptionCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("description"));
+        appointmentLocationCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("location"));
+        appointmentContactCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("contact"));
+        appointmentTypeCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("type"));
+        appointmentStartCol.setCellValueFactory(new PropertyValueFactory<Appointments, LocalDateTime>("start"));
+        appointmentEndCol.setCellValueFactory(new PropertyValueFactory<Appointments, LocalDateTime>("end"));
+        appointmentCustomerIDCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("customerID"));
+
         appointmentsTable.setItems(DBAppointments.getAllAppointments());
         appointmentsTable.refresh();
 
-        appointmentIDCol.setCellValueFactory(new PropertyValueFactory<Appointment, Integer>("appointmentID"));
-        appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("title"));
-        appointmentDescriptionCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("description"));
-        appointmentLocationCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("location"));
-        appointmentTypeCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("type"));
-        appointmentContactCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("contactName"));
-        appointmentStartCol.setCellValueFactory(new PropertyValueFactory<Appointment, ZonedDateTime>("startDateTime"));
-        appointmentEndCol.setCellValueFactory(new PropertyValueFactory<Appointment, ZonedDateTime>("endDateTime"));
-        appointmentCustomerIDCol.setCellValueFactory(new PropertyValueFactory<Appointment, Integer>("customerID"));
-        appointmentsTable.setItems(inputList);
-    } */
+        // set columns and vlaues for customers table
+        customerIDCol.setCellValueFactory(new PropertyValueFactory<Customers, Integer>("customerID"));
+        customerNameCol.setCellValueFactory(new PropertyValueFactory<Customers, String>("customerName"));
+        customerAddressCol.setCellValueFactory(new PropertyValueFactory<Customers, String>("address"));
+        customerPostalCol.setCellValueFactory(new PropertyValueFactory<Customers, String>("postalCode"));
+        customerCountryCol.setCellValueFactory(new PropertyValueFactory<Customers, String>("country"));
+        customerPhoneCol.setCellValueFactory(new PropertyValueFactory<Customers, String>("phone"));
+        customerDivisionCol.setCellValueFactory(new PropertyValueFactory<Customers, Integer>("divisionID"));
 
-
+        customerTable.setItems(DBCustomers.getAllCustomers());
+        customerTable.refresh();
+    }
 
     @FXML
     void addAppointmentButtonClicked(ActionEvent event) {
+        // launch add appointment window
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddAppointment.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
@@ -121,6 +168,7 @@ public class MainScreenController {
 
     @FXML
     void addCustomerButtonClicked(ActionEvent event) {
+        // launch add customer window
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCustomer.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
@@ -191,6 +239,7 @@ public class MainScreenController {
 
     @FXML
     void updateAppointmentButtonClicked(ActionEvent event) {
+        // launch update appointment window
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UpdateAppointment.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
@@ -204,6 +253,7 @@ public class MainScreenController {
 
     @FXML
     void updateCustomerButtonClicked(ActionEvent event) {
+        // launch update customer window
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UpdateCustomer.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
@@ -217,6 +267,7 @@ public class MainScreenController {
 
     @FXML
     void reportsButtonClicked(ActionEvent evenet) {
+        // launch reports window
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Reports.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
