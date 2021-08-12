@@ -2,8 +2,10 @@ package Views;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class AddAppointmentController {
 
@@ -18,7 +20,20 @@ public class AddAppointmentController {
 
     @FXML
     void cancelButtonClicked(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Cancel");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you wish to cancel?");
+        ButtonType buttonTypeOne = new ButtonType("Yes");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
+        alert.getDialogPane().lookupButton(buttonTypeCancel).setVisible(true);
+        Optional<ButtonType> result = alert.showAndWait();
 
+        if (result.get() == buttonTypeOne) {
+            Stage stage = (Stage) cancelButton.getScene().getWindow();
+            stage.close();
+        }
     }
 
     @FXML

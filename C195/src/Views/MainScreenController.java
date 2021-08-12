@@ -1,70 +1,43 @@
 package Views;
 
+import DBAccess.DBAppointments;
+import DBAccess.DBCountries;
+import Model.Appointments;
+import Model.Countries;
+import Model.Customers;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.net.URL;
+import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class MainScreenController {
 
     @FXML
-    private TableView<?> customerTable;
+    private TableView<Customers> customerTable;
 
     @FXML
-    private TableColumn<?, ?> customerIDCol;
+    private TableColumn customerIDCol, customerNameCol, customerAddressCol, customerPostalCol, customerCountryCol, customerPhoneCol, customerDivisionCol;
 
     @FXML
-    private TableColumn<?, ?> customerNameCol;
+    private TableView<Appointments> appointmentsTable;
 
     @FXML
-    private TableColumn<?, ?> customerAddressCol;
-
-    @FXML
-    private TableColumn<?, ?> customerPostalCol;
-
-    @FXML
-    private TableColumn<?, ?> customerCountryCol;
-
-    @FXML
-    private TableColumn<?, ?> customerPhoneCol;
-
-    @FXML
-    private TableColumn<?, ?> customerDivisionCol;
-
-    @FXML
-    private TableView<?> appointmentTable;
-
-    @FXML
-    private TableColumn<?, ?> appointmentIDCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentTitleCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentDescriptionCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentLocationCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentContactCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentTypeCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentStartCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentEndCol;
-
-    @FXML
-    private TableColumn<?, ?> appointmentCustomerIDCol;
+    private TableColumn<?, ?> appointmentIDCol, appointmentTitleCol, appointmentDescriptionCol, appointmentLocationCol, appointmentContactCol, appointmentTypeCol, appointmentStartCol, appointmentEndCol, appointmentCustomerIDCol;
 
     @FXML
     private Button addCustomerButton;
@@ -104,6 +77,34 @@ public class MainScreenController {
 
     @FXML
     private RadioButton weeklyAppointmentsRadio;
+
+    /* @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        appointmentIDCol.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        appointmentDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        appointmentLocationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        appointmentContactCol.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+        appointmentTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+        appointmentStartCol.setCellValueFactory(new PropertyValueFactory<>("start"));
+        appointmentEndCol.setCellValueFactory(new PropertyValueFactory<>("end"));
+        appointmentCustomerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        appointmentsTable.setItems(DBAppointments.getAllAppointments());
+        appointmentsTable.refresh();
+
+        appointmentIDCol.setCellValueFactory(new PropertyValueFactory<Appointment, Integer>("appointmentID"));
+        appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("title"));
+        appointmentDescriptionCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("description"));
+        appointmentLocationCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("location"));
+        appointmentTypeCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("type"));
+        appointmentContactCol.setCellValueFactory(new PropertyValueFactory<Appointment, String>("contactName"));
+        appointmentStartCol.setCellValueFactory(new PropertyValueFactory<Appointment, ZonedDateTime>("startDateTime"));
+        appointmentEndCol.setCellValueFactory(new PropertyValueFactory<Appointment, ZonedDateTime>("endDateTime"));
+        appointmentCustomerIDCol.setCellValueFactory(new PropertyValueFactory<Appointment, Integer>("customerID"));
+        appointmentsTable.setItems(inputList);
+    } */
+
+
 
     @FXML
     void addAppointmentButtonClicked(ActionEvent event) {
@@ -222,7 +223,7 @@ public class MainScreenController {
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
