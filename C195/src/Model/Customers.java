@@ -1,5 +1,8 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.time.LocalDateTime;
 
 public class Customers {
@@ -16,6 +19,8 @@ public class Customers {
     private String division;
     private int countryID;
     private String country;
+
+    private static ObservableList<Customers> customers = FXCollections.observableArrayList();
 
     public Customers(int customerID, String customerName, String address, String postalCode, String country, String phone, int divisionID) {
         this.customerID = customerID;
@@ -135,6 +140,19 @@ public class Customers {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public static ObservableList<Customers> getCustomers() {
+        return customers;
+    }
+
+    public static void setCustomers(ObservableList<Customers> customers) {
+        Customers.customers = customers;
+    }
+
+    @Override
+    public String toString() {
+        return customerName + " [" + customerID + "]";
     }
 }
 

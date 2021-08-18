@@ -6,6 +6,7 @@ import DBAccess.DBCustomers;
 import Model.Appointments;
 import Model.Countries;
 import Model.Customers;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,8 +23,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -114,6 +118,9 @@ public class MainScreenController implements Initializable {
     private RadioButton allAppointmentsRadio;
 
     @FXML
+    private DatePicker datePicker;
+
+    @FXML
     private ToggleGroup appointmentGroup;
 
     @FXML
@@ -124,6 +131,8 @@ public class MainScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         // set columns and values for appointsments table
         appointmentIDCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("appointmentID"));
@@ -150,6 +159,9 @@ public class MainScreenController implements Initializable {
 
         customerTable.setItems(DBCustomers.getAllCustomers());
         customerTable.refresh();
+
+        // set datepicker to current date upon load
+        datePicker.setValue(LocalDate.now());
     }
 
     @FXML
@@ -182,6 +194,24 @@ public class MainScreenController implements Initializable {
 
     @FXML
     void appointmentRadioSelection(ActionEvent event) {
+
+        if (appointmentGroup.getSelectedToggle() == allAppointmentsRadio) {
+            appointmentsTable.setItems(DBAppointments.getAllAppointments());
+            appointmentsTable.refresh();
+        }
+        else if (appointmentGroup.getSelectedToggle() == weeklyAppointmentsRadio) {
+            appointmentsTable.setItems(DBAppointments.getWeeklyAppointments());
+            appointmentsTable.refresh();
+        }
+        else if (appointmentGroup.getSelectedToggle() == monthlyAppointmentsRadio) {
+            appointmentsTable.setItems(DBAppointments.getMonthlyAppointments());
+            appointmentsTable.refresh();
+        }
+
+    }
+
+    @FXML
+    void datePicked (ActionEvent event) {
 
     }
 

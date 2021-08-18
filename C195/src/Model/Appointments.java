@@ -11,9 +11,9 @@ public class Appointments {
     private String description;
     private String location;
     private String type;
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private LocalDateTime createDate;
+    private Timestamp start;
+    private Timestamp end;
+    private Timestamp createDate;
     private String createdBy;
     private Timestamp lastUpdate;
     private String lastUpdateBy;
@@ -24,7 +24,9 @@ public class Appointments {
     private String contact;
     private String user;
 
-    public Appointments(int appointmentID, String title, String description, String location, String contact, String type, LocalDateTime start, LocalDateTime end, int customerID) {
+    private static ObservableList<Appointments> appointments = FXCollections.observableArrayList();
+
+    public Appointments(int appointmentID, String title, String description, String location, String contact, String type, Timestamp start, Timestamp end, int customerID) {
         this.appointmentID = appointmentID;
         this.title = title;
         this.description = description;
@@ -86,27 +88,27 @@ public class Appointments {
         this.type = type;
     }
 
-    public LocalDateTime getStart() {
+    public Timestamp getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(Timestamp start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public Timestamp getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(Timestamp end) {
         this.end = end;
     }
 
-    public LocalDateTime getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
@@ -180,5 +182,13 @@ public class Appointments {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public static ObservableList<Appointments> getAppointments() {
+        return appointments;
+    }
+
+    public static void setAppointments(ObservableList<Appointments> appointments) {
+        Appointments.appointments = appointments;
     }
 }
