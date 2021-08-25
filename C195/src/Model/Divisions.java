@@ -19,7 +19,12 @@ public class Divisions {
         this.countryName = countryName;
     }
 
-    public int getDivisionId() {
+    public Divisions(int divisionID, String division) {
+        this.divisionID = divisionID;
+        this.division = division;
+    }
+
+    public int getDivisionID() {
         return divisionID;
     }
 
@@ -27,7 +32,7 @@ public class Divisions {
         return division;
     }
 
-    public int getCountryId() {
+    public int getCountryID() {
         return countryID;
     }
 
@@ -35,13 +40,12 @@ public class Divisions {
         return countryName;
     }
 
-    public static ObservableList<Divisions> getAllDivisions() {
+    public static ObservableList<Divisions> getDivisions() {
         return divisions;
     }
 
-    public static void setAllDivisions(ObservableList<Divisions> divisions) {
+    public static void setDivisions(ObservableList<Divisions> divisions) {
         Divisions.divisions = divisions;
-        System.out.println("Divisions set");
     }
 
     @Override

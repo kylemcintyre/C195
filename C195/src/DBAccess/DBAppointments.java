@@ -22,14 +22,13 @@ public class DBAppointments {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-
-
         try {
-            String sql = "SELECT *, customers.Customer_ID, users.User_ID, contacts.Contact_ID, customers.Customer_Name, contacts.Contact_Name, users.User_Name from appointments, customers, users, contacts" +
-                    " WHERE customers.Customer_ID = appointments.Customer_ID AND users.User_ID = appointments.User_ID AND contacts.Contact_ID = appointments.Contact_ID";
-
+            String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, " +
+                    "appointments.Customer_ID, Customer_Name, appointments.User_ID, User_Name, appointments.Contact_ID, " +
+                    "Contact_Name FROM appointments, users, customers, contacts WHERE appointments.Customer_ID = " +
+                    "customers.Customer_ID AND appointments.User_ID = users.User_ID AND appointments.Contact_ID = " +
+                    "contacts.Contact_ID ORDER BY appointments.Appointment_ID;";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -37,29 +36,21 @@ public class DBAppointments {
                 String title = rs.getString("Title");
                 String description = rs.getString("Description");
                 String location = rs.getString("Location");
-                String contact = rs.getString("Contact_Name");
                 String type = rs.getString("Type");
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
                 int customerID = rs.getInt("Customer_ID");
-                /*LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
-                String createdBy = rs.getString("Created_By");
-                Timestamp lastUpdate = rs.getTimestamp("Last_Update");
-                String lastUpdatedBy = rs.getString("Last_Updated_By");
-                int customerID = rs.getInt("Customer_ID");
-                int userID = rs.getInt("User_ID");
-                int contactID = rs.getInt("Contact_ID");
                 String customerName = rs.getString("Customer_Name");
+                int userID = rs.getInt("User_ID");
                 String userName = rs.getString("User_Name");
-                String contactName = rs.getString("Contact_Name");*/
+                int contactID = rs.getInt("Contact_ID");
+                String contactName = rs.getString("Contact_Name");
 
-                start.toInstant();
-
-                Appointments A = new Appointments(appointmentID, title, description, location, contact, type, start, end, customerID);
+                Appointments A = new Appointments(appointmentID, title, description, location, type, start, end, customerID, customerName, userID, userName, contactID, contactName);
                 alist.add(A);
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return alist;
@@ -87,23 +78,17 @@ public class DBAppointments {
                 String title = rs.getString("Title");
                 String description = rs.getString("Description");
                 String location = rs.getString("Location");
-                String contact = rs.getString("Contact_Name");
                 String type = rs.getString("Type");
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
                 int customerID = rs.getInt("Customer_ID");
-                /*LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
-                String createdBy = rs.getString("Created_By");
-                Timestamp lastUpdate = rs.getTimestamp("Last_Update");
-                String lastUpdatedBy = rs.getString("Last_Updated_By");
-                int customerID = rs.getInt("Customer_ID");
-                int userID = rs.getInt("User_ID");
-                int contactID = rs.getInt("Contact_ID");
                 String customerName = rs.getString("Customer_Name");
+                int userID = rs.getInt("User_ID");
                 String userName = rs.getString("User_Name");
-                String contactName = rs.getString("Contact_Name");*/
+                int contactID = rs.getInt("Contact_ID");
+                String contactName = rs.getString("Contact_Name");
 
-                Appointments A = new Appointments(appointmentID, title, description, location, contact, type, start, end, customerID);
+                Appointments A = new Appointments(appointmentID, title, description, location, type, start, end, customerID, customerName, userID, userName, contactID, contactName);
                 alist.add(A);
             }
         } catch (SQLException throwables) {
@@ -135,23 +120,17 @@ public class DBAppointments {
                 String title = rs.getString("Title");
                 String description = rs.getString("Description");
                 String location = rs.getString("Location");
-                String contact = rs.getString("Contact_Name");
                 String type = rs.getString("Type");
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
                 int customerID = rs.getInt("Customer_ID");
-                /*LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
-                String createdBy = rs.getString("Created_By");
-                Timestamp lastUpdate = rs.getTimestamp("Last_Update");
-                String lastUpdatedBy = rs.getString("Last_Updated_By");
-                int customerID = rs.getInt("Customer_ID");
-                int userID = rs.getInt("User_ID");
-                int contactID = rs.getInt("Contact_ID");
                 String customerName = rs.getString("Customer_Name");
+                int userID = rs.getInt("User_ID");
                 String userName = rs.getString("User_Name");
-                String contactName = rs.getString("Contact_Name");*/
+                int contactID = rs.getInt("Contact_ID");
+                String contactName = rs.getString("Contact_Name");
 
-                Appointments A = new Appointments(appointmentID, title, description, location, contact, type, start, end, customerID);
+                Appointments A = new Appointments(appointmentID, title, description, location, type, start, end, customerID, customerName, userID, userName, contactID, contactName);
                 alist.add(A);
             }
         } catch (SQLException throwables) {
@@ -176,6 +155,43 @@ public class DBAppointments {
             ps.setInt(7, customerID);
             ps.setInt(8, userID);
             ps.setInt(9, contactID);
+            ps.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateAppointment(int appointmentID, String title, String description, String location, String type,
+                                         Timestamp start, Timestamp end, int customerID, int userID, int contactID) {
+        try {
+            String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, " +
+                    "End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?;";
+
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+            ps.setString(1, title);
+            ps.setString(2, description);
+            ps.setString(3, location);
+            ps.setString(4, type);
+            ps.setTimestamp(5, start);
+            ps.setTimestamp(6, end);
+            ps.setInt(7, customerID);
+            ps.setInt(8, userID);
+            ps.setInt(9, contactID);
+            ps.setInt(10, appointmentID);
+            ps.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteAppointment(int appointmentID) {
+        try {
+            String sql = "DELETE FROM appointments WHERE Appointment_ID = ?;";
+
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+            ps.setInt(1, appointmentID);
             ps.execute();
 
         } catch (SQLException e) {

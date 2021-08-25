@@ -25,5 +25,6 @@
       </Button>
       <Label fx:id="usernameLabel" alignment="CENTER" layoutX="217.0" layoutY="208.0" text="Username" />
       <Label fx:id="passwordLabel" alignment="CENTER" layoutX="217.0" layoutY="255.0" text="Password" />
+      <Label fx:id="zoneIDLabel" layoutX="14.0" layoutY="369.0" />
    </children>
 </AnchorPane>

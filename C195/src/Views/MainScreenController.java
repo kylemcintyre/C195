@@ -118,9 +118,6 @@ public class MainScreenController implements Initializable {
     private RadioButton allAppointmentsRadio;
 
     @FXML
-    private DatePicker datePicker;
-
-    @FXML
     private ToggleGroup appointmentGroup;
 
     @FXML
@@ -128,6 +125,9 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private RadioButton weeklyAppointmentsRadio;
+
+    public static Appointments appointmentToModify;
+    public static Customers customerToModify;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -159,9 +159,6 @@ public class MainScreenController implements Initializable {
 
         customerTable.setItems(DBCustomers.getAllCustomers());
         customerTable.refresh();
-
-        // set datepicker to current date upon load
-        datePicker.setValue(LocalDate.now());
     }
 
     @FXML
@@ -173,6 +170,8 @@ public class MainScreenController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
+            Stage stage2 = (Stage) logoutButton.getScene().getWindow();
+            stage2.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -187,6 +186,8 @@ public class MainScreenController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
+            Stage stage2 = (Stage) logoutButton.getScene().getWindow();
+            stage2.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -211,16 +212,16 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    void datePicked (ActionEvent event) {
-
-    }
-
-    @FXML
     void deleteAppointmentButtonClicked(ActionEvent event) {
+
+        Appointments appointmentToDelete = appointmentsTable.getSelectionModel().getSelectedItem();
+        int appointmentID = appointmentToDelete.getAppointmentID();
+        String appointmentType = appointmentToDelete.getType();
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Appointment");
         alert.setHeaderText(null);
-        alert.setContentText("Are you sure you wish to delete this appointment?");
+        alert.setContentText("Are you sure you wish to delete Appointment ID:" + appointmentID + ", Type:" + appointmentType);
         ButtonType buttonTypeOne = new ButtonType("Yes");
         ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
@@ -228,16 +229,27 @@ public class MainScreenController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == buttonTypeOne) {
+            if (!(appointmentsTable.getSelectionModel().getSelectedItem() == null)) {
 
+                DBAppointments.deleteAppointment(appointmentID);
+
+                appointmentsTable.setItems(DBAppointments.getAllAppointments());
+                appointmentsTable.refresh();
+            }
         }
     }
 
     @FXML
     void deleteCustomerButtonClicked(ActionEvent event) {
+
+        Customers customerToDelete = customerTable.getSelectionModel().getSelectedItem();
+        int customerID = customerToDelete.getCustomerID();
+        String customerName = customerToDelete.getCustomerName();
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Customer");
         alert.setHeaderText(null);
-        alert.setContentText("Are you sure you wish to delete this customer?");
+        alert.setContentText("Are you sure you wish to delete " + customerName + "?");
         ButtonType buttonTypeOne = new ButtonType("Yes");
         ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
@@ -246,11 +258,18 @@ public class MainScreenController implements Initializable {
 
         if (result.get() == buttonTypeOne) {
 
+            DBCustomers.deleteCustomer(customerID);
+
+            customerTable.setItems(DBCustomers.getAllCustomers());
+            customerTable.refresh();
+            appointmentsTable.setItems(DBAppointments.getAllAppointments());
+            appointmentsTable.refresh();
         }
     }
 
     @FXML
     void logoutButtonClicked(ActionEvent event) {
+        // logout back to login screen
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout");
         alert.setHeaderText(null);
@@ -265,17 +284,40 @@ public class MainScreenController implements Initializable {
             Stage stage = (Stage) logoutButton.getScene().getWindow();
             stage.close();
         }
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void updateAppointmentButtonClicked(ActionEvent event) {
         // launch update appointment window
         try {
+            appointmentToModify = appointmentsTable.getSelectionModel().getSelectedItem();
+            System.out.println(appointmentToModify.getAppointmentID());
+            System.out.println(appointmentToModify.getTitle());
+            System.out.println(appointmentToModify.getDescription());
+            System.out.println(appointmentToModify.getLocation());
+            System.out.println(appointmentToModify.getType());
+            System.out.println(appointmentToModify.getCustomer());
+            System.out.println(appointmentToModify.getUserID());
+            System.out.println(appointmentToModify.getContactID());
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UpdateAppointment.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
+
+            Stage stage2 = (Stage) logoutButton.getScene().getWindow();
+            stage2.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -285,11 +327,23 @@ public class MainScreenController implements Initializable {
     void updateCustomerButtonClicked(ActionEvent event) {
         // launch update customer window
         try {
+            customerToModify = customerTable.getSelectionModel().getSelectedItem();
+            System.out.println(customerToModify.getCustomerID());
+            System.out.println(customerToModify.getCustomerName());
+            System.out.println(customerToModify.getAddress());
+            System.out.println(customerToModify.getPostalCode());
+            System.out.println(customerToModify.getPhone());
+            System.out.println(customerToModify.getCountry());
+            System.out.println(customerToModify.getDivisionID());
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UpdateCustomer.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
+
+            Stage stage2 = (Stage) logoutButton.getScene().getWindow();
+            stage2.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -304,6 +358,9 @@ public class MainScreenController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
+
+            Stage stage2 = (Stage) logoutButton.getScene().getWindow();
+            stage2.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

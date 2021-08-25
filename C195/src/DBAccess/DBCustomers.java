@@ -5,6 +5,9 @@ import Model.Customers;
 import Utilities.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.stage.Modality;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,16 +36,6 @@ public class DBCustomers {
                 String country = rs.getString("Country");
                 String phone = rs.getString("phone");
                 int divisionID = rs.getInt("Division_ID");
-                /*LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
-                String createdBy = rs.getString("Created_By");
-                Timestamp lastUpdate = rs.getTimestamp("Last_Update");
-                String lastUpdatedBy = rs.getString("Last_Updated_By");
-                int customerID = rs.getInt("Customer_ID");
-                int userID = rs.getInt("User_ID");
-                int contactID = rs.getInt("Contact_ID");
-                String customerName = rs.getString("Customer_Name");
-                String userName = rs.getString("User_Name");
-                String contactName = rs.getString("Contact_Name");*/
 
                 Customers C = new Customers(customerID, customerName, address, postalCode, country, phone, divisionID);
                 clist.add(C);
@@ -52,5 +45,67 @@ public class DBCustomers {
         }
 
         return clist;
+    }
+
+    public static void addCustomer(String customernMame, String address, String postalCode, String phoneNumber, int divisionID) {
+        try {
+            String sql = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, " +
+                    "Division_ID) VALUES (NULL,?,?,?,?,?);";
+
+            PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(sql);
+            preparedStatement.setString(1, customernMame);
+            preparedStatement.setString(2, address);
+            preparedStatement.setString(3, postalCode);
+            preparedStatement.setString(4, phoneNumber);
+            preparedStatement.setInt(5, divisionID);
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateCustomer(int customerID, String customerName, String address, String postalCode, String phoneNumber, int divisionID) {
+        try {
+            String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, " +
+                    "Division_ID = ? WHERE Customer_ID = ?;";
+
+            PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(sql);
+            preparedStatement.setString(1, customerName);
+            preparedStatement.setString(2, address);
+            preparedStatement.setString(3, postalCode);
+            preparedStatement.setString(4, phoneNumber);
+            preparedStatement.setInt(5, divisionID);
+            preparedStatement.setInt(6, customerID);
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteCustomer(int customerID) {
+
+        try {
+            String sql = "DELETE FROM appointments WHERE Customer_ID = ?;";
+
+            PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(sql);
+            preparedStatement.setInt(1, customerID);
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String sql = "DELETE FROM customers WHERE Customer_ID = ?;";
+
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+            ps.setInt(1, customerID);
+            ps.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

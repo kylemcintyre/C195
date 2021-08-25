@@ -2,7 +2,10 @@ package Model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Appointments {
@@ -20,31 +23,28 @@ public class Appointments {
     private int customerID;
     private int userID;
     private int contactID;
-    private String customer;
-    private String contact;
-    private String user;
+    private String customerName;
+    private String contactName;
+    private String userName;
 
     private static ObservableList<Appointments> appointments = FXCollections.observableArrayList();
 
-    public Appointments(int appointmentID, String title, String description, String location, String contact, String type, Timestamp start, Timestamp end, int customerID) {
+    public Appointments(int appointmentID, String title, String description, String location, String type,
+                        Timestamp start, Timestamp end, int customerID, String customerName, int userID,
+                        String userName, int contactID, String contactName) {
         this.appointmentID = appointmentID;
         this.title = title;
         this.description = description;
         this.location = location;
-        this.contact = contact;
         this.type = type;
         this.start = start;
         this.end = end;
-        this.createDate = createDate;
-        this.createdBy = createdBy;
-        this.lastUpdate = lastUpdate;
-        this.lastUpdateBy = lastUpdateBy;
         this.customerID = customerID;
+        this.customerName = customerName;
         this.userID = userID;
+        this.userName = userName;
         this.contactID = contactID;
-        this.customer = customer;
-        this.user = user;
-        this.contact = contact;
+        this.contactName = contactName;
 
     }
 
@@ -161,27 +161,27 @@ public class Appointments {
     }
 
     public String getCustomer() {
-        return customer;
+        return customerName;
     }
 
     public void setCustomer(String customer) {
-        this.customer = customer;
+        this.customerName = customerName;
     }
 
     public String getContact() {
-        return contact;
+        return contactName;
     }
 
     public void setContact(String contact) {
-        this.contact = contact;
+        this.contactName = contactName;
     }
 
     public String getUser() {
-        return user;
+        return userName;
     }
 
     public void setUser(String user) {
-        this.user = user;
+        this.userName = userName;
     }
 
     public static ObservableList<Appointments> getAppointments() {
@@ -190,5 +190,11 @@ public class Appointments {
 
     public static void setAppointments(ObservableList<Appointments> appointments) {
         Appointments.appointments = appointments;
+    }
+
+    public LocalDate getStartDate (Timestamp startDate) {
+        String startDateString = startDate.toString();
+        LocalDate startLocalDate = LocalDate.parse(startDateString);
+        return startLocalDate;
     }
 }

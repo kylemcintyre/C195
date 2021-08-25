@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
@@ -59,13 +58,12 @@
          </font>
       </Label>
       <Button fx:id="reportsButton" layoutX="47.0" layoutY="961.0" mnemonicParsing="false" onAction="#reportsButtonClicked" text="Reports" />
-      <RadioButton fx:id="allAppointmentsRadio" layoutX="654.0" layoutY="570.0" mnemonicParsing="false" onAction="#appointmentRadioSelection" selected="true" text="All Appointments">
+      <RadioButton fx:id="allAppointmentsRadio" layoutX="832.0" layoutY="570.0" mnemonicParsing="false" onAction="#appointmentRadioSelection" selected="true" text="All Appointments">
          <toggleGroup>
             <ToggleGroup fx:id="appointmentGroup" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="monthlyAppointmentsRadio" layoutX="505.0" layoutY="570.0" mnemonicParsing="false" onAction="#appointmentRadioSelection" text="Monthly Appointments" toggleGroup="$appointmentGroup" />
-      <RadioButton fx:id="weeklyAppointmentsRadio" layoutX="362.0" layoutY="570.0" mnemonicParsing="false" onAction="#appointmentRadioSelection" text="Weekly Appointments" toggleGroup="$appointmentGroup" />
-      <DatePicker fx:id="datePicker" layoutX="773.0" layoutY="566.0" onAction="#datePicked" />
+      <RadioButton fx:id="monthlyAppointmentsRadio" layoutX="683.0" layoutY="570.0" mnemonicParsing="false" onAction="#appointmentRadioSelection" text="Monthly Appointments" toggleGroup="$appointmentGroup" />
+      <RadioButton fx:id="weeklyAppointmentsRadio" layoutX="540.0" layoutY="570.0" mnemonicParsing="false" onAction="#appointmentRadioSelection" text="Weekly Appointments" toggleGroup="$appointmentGroup" />
    </children>
 </AnchorPane>

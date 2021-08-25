@@ -3,6 +3,7 @@ package Views;
 import DBAccess.DBAppointments;
 import DBAccess.DBLogin;
 import Model.Appointments;
+import Utilities.DBConnection;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,10 +21,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -45,6 +46,9 @@ public class LoginController implements Initializable {
    @FXML
    private Label passwordLabel;
 
+    @FXML
+    private Label zoneIDLabel;
+
 
     public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public static int timeDifference;
@@ -56,7 +60,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        Locale.setDefault(new Locale("fr"));
+        //Locale.setDefault(new Locale("fr"));
         //TimeZone.setDefault(TimeZone.getTimeZone("Europe/France"));
         //TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
         //TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
@@ -70,6 +74,8 @@ public class LoginController implements Initializable {
         ZonedDateTime utcEST = currentTimeZone.withZoneSameInstant(ZoneId.of("America/New_York"));
 
         ZonedDateTime utcLocal = currentUTC.atZone(currentZoneID);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         timeDifference = utcLocal.getHour() - utcEST.getHour();
         startTime += timeDifference;
@@ -88,6 +94,7 @@ public class LoginController implements Initializable {
                 passwordText.setPromptText(rb.getString("password"));
                 passwordLabel.setText(rb.getString("password"));
                 loginButton.setText(rb.getString("login"));
+                zoneIDLabel.setText(ZoneId.systemDefault().getId());
 
             } catch (MissingResourceException e) {
                 e.printStackTrace();
@@ -100,6 +107,7 @@ public class LoginController implements Initializable {
                 passwordText.setPromptText(rb.getString("password"));
                 passwordLabel.setText(rb.getString("password"));
                 loginButton.setText(rb.getString("login"));
+                zoneIDLabel.setText(ZoneId.systemDefault().getId());
             } catch (MissingResourceException e) {
                 e.printStackTrace();
             }
@@ -109,22 +117,56 @@ public class LoginController implements Initializable {
     @FXML
     void loginButtonClicked(ActionEvent event) throws Exception {
 
-        String username = usernameText.getText();
+        String userName = usernameText.getText();
         String password = passwordText.getText();
-        boolean goodLogin = DBLogin.goodLogin(username, password);
+        boolean goodLogin = DBLogin.goodLogin(userName, password);
+        ObservableList<Appointments> A = DBAppointments.getAllAppointments();
+        ZonedDateTime currentDateTime = ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"));
+
+        String sql = "SELECT Appointment_ID, Start FROM appointments " +
+                "WHERE CAST(Start as DATE) = '" + currentDateTime.toLocalDate() + "' AND ('"
+                + dtf.format(currentDateTime) + "' <= Start AND '" +
+                dtf.format(currentDateTime.plusMinutes(15)) + "' >= Start);";
+
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+
+        ResultSet rs = ps.executeQuery();
+
+        FileWriter fw = new FileWriter("C195/src/login_activity.txt", true);
+        PrintWriter pw = new PrintWriter(fw);
+        pw.println(dtf.format(currentDateTime) + " Username:" + userName + " Login:" + goodLogin);
+        pw.close();
 
         if (goodLogin) {
 
-            // load stage
+            if(rs.next()) {
+                int appointmentID = rs.getInt("Appointment_ID");
+                LocalDateTime dateTime = rs.getTimestamp("Start").toLocalDateTime();
+
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Appointments");
+                alert.setHeaderText("Upcoming Appointment");
+                alert.setContentText("Appointment ID: " + appointmentID +
+                        "\nDate: " + dateTime.toString().substring(0, 10) +
+                        "\nTime: " + dateTime.toString().substring(11,16));
+                alert.showAndWait();
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Appointments");
+                alert.setHeaderText("No Upcoming Appointments");
+                alert.setContentText("No Upcoming Appointments");
+                alert.showAndWait();
+            }
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
                 Parent root1 = (Parent) fxmlLoader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root1));
                 stage.show();
-                usernameText.clear();
-                passwordText.clear();
-                usernameText.requestFocus();
+
+                Stage stage2 = (Stage) loginButton.getScene().getWindow();
+                stage2.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

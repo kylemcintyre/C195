@@ -79,7 +79,6 @@ public class Countries {
 
     public static void setAllCountries(ObservableList<Countries> countries) {
         Countries.countries = countries;
-        System.out.println("Countries set");
     }
 
     @Override

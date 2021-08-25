@@ -28,7 +28,7 @@ public class Contacts {
         return contacts;
     }
 
-    public static void setAllContacts(ObservableList<Contacts> contacts) {
+    public static void setContacts(ObservableList<Contacts> contacts) {
         Contacts.contacts = contacts;
     }
 
