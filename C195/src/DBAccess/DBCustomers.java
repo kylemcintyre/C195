@@ -13,10 +13,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**Class that selects various customer information from the customers table.
+ *
+ */
 public class DBCustomers {
 
     public static ObservableList<Customers> clist;
 
+    /**Method that uses SQL to get all customer information from customers, first_level_divisions, and countries tables.
+     *
+     * @return Returns ObservableLst clist
+     */
     public static ObservableList<Customers> getAllCustomers() {
         ObservableList<Customers> clist = FXCollections.observableArrayList();
 
@@ -47,6 +54,14 @@ public class DBCustomers {
         return clist;
     }
 
+    /**Method that uses SQL to insert user supplied data into the customers table.
+     *
+     * @param customernMame Customers name
+     * @param address Customers address
+     * @param postalCode Customers ZIP code
+     * @param phoneNumber Customer phone number
+     * @param divisionID Customers divisionID
+     */
     public static void addCustomer(String customernMame, String address, String postalCode, String phoneNumber, int divisionID) {
         try {
             String sql = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, " +
@@ -65,6 +80,15 @@ public class DBCustomers {
         }
     }
 
+    /**Method that uses SQL to update an existing customer in the customers table.
+     *
+     * @param customerID CustomerID
+     * @param customerName Customer name
+     * @param address Customer address
+     * @param postalCode Customer ZIP code
+     * @param phoneNumber Customer phone number
+     * @param divisionID Customer divisionID
+     */
     public static void updateCustomer(int customerID, String customerName, String address, String postalCode, String phoneNumber, int divisionID) {
         try {
             String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, " +
@@ -84,6 +108,10 @@ public class DBCustomers {
         }
     }
 
+    /**Method that first deletes a customers appointments, and then the customer from the customers table where the customerID matches.
+     *
+     * @param customerID CustomerID
+     */
     public static void deleteCustomer(int customerID) {
 
         try {

@@ -2,6 +2,9 @@ package Model;
 
 import java.sql.Timestamp;
 
+/**Class that gets and sets report variables and creates Report objects.
+ *
+ */
 public class Reports {
 
     private int appointmentID;
@@ -24,6 +27,13 @@ public class Reports {
     private String contactEmail;
 
 
+    /**Method to create Report object for typeMonth report.
+     *
+     * @param type
+     * @param month
+     * @param monthInt
+     * @param customerAppointments
+     */
     public Reports(String type, String month, int monthInt, int customerAppointments) {
         this.type = type;
         this.month = month;
@@ -31,6 +41,19 @@ public class Reports {
         this.customerAppointments = customerAppointments;
     }
 
+    /**Method to create Report object for contactSchedule report.
+     *
+     * @param appointmentID
+     * @param title
+     * @param type
+     * @param description
+     * @param start
+     * @param end
+     * @param customerID
+     * @param customerName
+     * @param ContactID
+     * @param contactName
+     */
     public Reports(int appointmentID, String title, String type, String description, Timestamp start, Timestamp end, int customerID, String customerName, int ContactID, String contactName) {
         this.appointmentID = appointmentID;
         this.title = title;
@@ -44,6 +67,11 @@ public class Reports {
         this.contactName = contactName;
     }
 
+    /**Method to create Report object for contactEmail report.
+     *
+     * @param contactName
+     * @param contactEmail
+     */
     public Reports(String contactName, String contactEmail) {
         this.contactName = contactName;
         this.contactEmail = contactEmail;

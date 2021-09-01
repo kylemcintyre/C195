@@ -3,6 +3,9 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**Class that gets and sets user variables and creates User objects.
+ *
+ */
 public class Users {
 
     private int userID;
@@ -10,6 +13,11 @@ public class Users {
 
     private static ObservableList<Users> users = FXCollections.observableArrayList();
 
+    /**Method to create User objects.
+     *
+     * @param userID
+     * @param username
+     */
     public Users(int userID, String username) {
         this.userID = userID;
         this.username = username;

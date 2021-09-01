@@ -9,8 +9,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**Class to get all current users from the users table
+ *
+ */
 public class DBUsers {
 
+    /**Method that gets userID and userName from the users table.
+     *
+     * @return Returns Users object
+     */
     public static ObservableList<Users> getUsers() {
         ObservableList<Users> users = FXCollections.observableArrayList();
 

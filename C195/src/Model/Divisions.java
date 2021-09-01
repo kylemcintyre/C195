@@ -3,6 +3,9 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**Class that gets and sets divisions variables and creates Division objects.
+ *
+ */
 public class Divisions {
 
     private int divisionID;
@@ -12,6 +15,13 @@ public class Divisions {
 
     private static ObservableList<Divisions> divisions = FXCollections.observableArrayList();
 
+    /**Method to create Division objects.
+     *
+     * @param divisionID
+     * @param division
+     * @param countryID
+     * @param countryName
+     */
     public Divisions(int divisionID, String division, int countryID, String countryName) {
         this.divisionID = divisionID;
         this.division = division;

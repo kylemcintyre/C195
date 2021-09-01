@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**Class that sets up the connection to the database. Uses the startConnection method on Main startup
+ *
+ */
 public class DBConnection {
 
     // JDBC URL parts
@@ -22,6 +25,10 @@ public class DBConnection {
     private static final String username = "U07jFq"; // Username
     private static final String password = "53689046315"; // Password
 
+    /**Method to pass information for the database to the DriverManager.
+     *
+     * @return Returns DriverManager connection conn
+     */
     public static Connection startConnection() {
         try {
             Class.forName(MYSQLJDBCDriver);
@@ -36,10 +43,17 @@ public class DBConnection {
         return conn;
     }
 
+    /**Method to reistablish database connection.
+     *
+     * @return Returns DriverManager connection conn
+     */
     public static Connection getConnection() {
         return conn;
     }
 
+    /**Method to close connection to the database when program is closed.
+     *
+     */
     public static void closeConnection() {
 
         try {

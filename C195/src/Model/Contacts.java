@@ -3,6 +3,9 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**Class that gets and sets contact variables and creates Contact objects.
+ *
+ */
 public class Contacts {
 
     private int contactID;
@@ -10,6 +13,11 @@ public class Contacts {
 
     private static ObservableList<Contacts> contacts = FXCollections.observableArrayList();
 
+    /**Method to create Contact objects.
+     *
+     * @param contactID
+     * @param contactName
+     */
     public Contacts(int contactID, String contactName) {
         this.contactID = contactID;
         this.contactName = contactName;

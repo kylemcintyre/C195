@@ -9,8 +9,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**Class that makes calls to first_level_divisions table.
+ *
+ */
 public class DBDivisions {
 
+    /**Method that uses SQL to retrieve all divisions from the first_level_divisions table.
+     *
+     * @return Returns ObservableList dList
+     */
     public static ObservableList<Divisions> getDivisions() {
         ObservableList<Divisions> dList = FXCollections.observableArrayList();
 
@@ -36,6 +43,11 @@ public class DBDivisions {
         return dList;
     }
 
+    /**Method to get the divisions for a specific country.
+     *
+     * @param countryID CountryID
+     * @return Returns ObservableList dList
+     */
     public static ObservableList<Divisions> getDivisionsByCountry(int countryID) {
         ObservableList<Divisions> dList = FXCollections.observableArrayList();
 
@@ -63,6 +75,11 @@ public class DBDivisions {
         return dList;
     }
 
+    /**Method that gets divisions by their divisionID.
+     *
+     * @param divisionNum DivisionID
+     * @return Returns Divisions object divisions
+     */
     public static Divisions getDivisionByID(int divisionNum) {
         Divisions divisions = null;
 

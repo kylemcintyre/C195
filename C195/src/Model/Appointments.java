@@ -8,6 +8,9 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**Class that gets and sets appointment variables and creates Appointment objects.
+ *
+ */
 public class Appointments {
     private int appointmentID;
     private String title;
@@ -29,6 +32,22 @@ public class Appointments {
 
     private static ObservableList<Appointments> appointments = FXCollections.observableArrayList();
 
+    /**Method to create Appointment objects
+     *
+     * @param appointmentID
+     * @param title
+     * @param description
+     * @param location
+     * @param type
+     * @param start
+     * @param end
+     * @param customerID
+     * @param customerName
+     * @param userID
+     * @param userName
+     * @param contactID
+     * @param contactName
+     */
     public Appointments(int appointmentID, String title, String description, String location, String type,
                         Timestamp start, Timestamp end, int customerID, String customerName, int userID,
                         String userName, int contactID, String contactName) {

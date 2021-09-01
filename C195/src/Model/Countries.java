@@ -6,6 +6,9 @@ import javafx.collections.ObservableList;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+/**Class that gets and sets countries variables and creates Country objects.
+ *
+ */
 public class Countries {
     private int countryID;
     private String countryName;
@@ -16,6 +19,11 @@ public class Countries {
 
     private static ObservableList<Countries> countries = FXCollections.observableArrayList();
 
+    /**Method to create Country objects.
+     *
+     * @param countryID
+     * @param countryName
+     */
     public Countries(int countryID, String countryName) {
         this.countryID = countryID;
         this.countryName = countryName;

@@ -32,6 +32,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.SimpleTimeZone;
 
+/**Class to handle all logic for the AddAppointment fxml page.
+ *
+ */
 public class AddAppointmentController implements Initializable {
 
     @FXML
@@ -95,32 +98,51 @@ public class AddAppointmentController implements Initializable {
         stage2.show();
     };
 
+    /**Method to load data into the AddAppointment fxml file upon load.
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        // declare dateTimeFormatter
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+        // set datepickers to current date
         startDate.setValue(LocalDate.now());
         endDate.setValue(LocalDate.now());
         startTimeCombo.setValue("08:00");
         endTimeCombo.setValue("09:00");
 
+        // sets items in the customerIDCombo with getAllCustomers()
         Customers.setCustomers(DBCustomers.getAllCustomers());
         customerIDCombo.setItems(Customers.getCustomers());
 
+        // sets items in the userIDCombo with getUsers()
         Users.setUsers(DBUsers.getUsers());
         userIDCombo.setItems(Users.getUsers());
 
+        // sets items in the contactIDCombo with getContacts()
         Contacts.setContacts(DBContacts.getContacts());
         contactIDCombo.setItems(Contacts.getContacts());
 
+        // load array of times into the start and end time comboboxes
         String times[] = { "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"};
         startTimeCombo.setItems(FXCollections.observableArrayList(times));
         endTimeCombo.setItems(FXCollections.observableArrayList(times));
     }
 
+    /**Method to go back to mainScreen when the cancel button is clicked
+     *
+     * @param event Performs action when cancel button is clicked
+     * <p><b>
+     * Lambda loadMainScreen.mainScreen() is used in this method to reduce code clutter for loading back to the mainScreen.
+     * </b></p>
+     */
     @FXML
     void cancelButtonClicked(ActionEvent event) {
+        // confirmation alert asking if the user is sure they want to cancel
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Cancel");
         alert.setHeaderText(null);
@@ -131,11 +153,13 @@ public class AddAppointmentController implements Initializable {
         alert.getDialogPane().lookupButton(buttonTypeCancel).setVisible(true);
         Optional<ButtonType> result = alert.showAndWait();
 
+        // if user clicks ok to cancel, closes current window and loads mainScreen
         if (result.get() == buttonTypeOne) {
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.close();
 
             try {
+                // runs lambda to load mainScreen
                 loadMainScreen.mainScreen();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,9 +167,16 @@ public class AddAppointmentController implements Initializable {
         }
     }
 
+    /**Method to check if customer has an overlapping appointment when creating a new appointment or updating an existing one.
+     *
+     * @param appointments
+     * @param customerID
+     * @param startStamp
+     * @param endStamp
+     * @return Returns true if an overlapping appointment is found, otherwise returns false
+     */
     public boolean checkAppointmentOverlap(ObservableList<Appointments> appointments, Customers customerID,
                                            Timestamp startStamp, Timestamp endStamp) {
-        // checks for overlapping appointments for the selected customer and returns true starttimes match
         for (Appointments a : appointments) {
             if (a.getCustomerID() == customerID.getCustomerID()) {
                 //System.out.println(a.getCustomerID());
@@ -157,10 +188,16 @@ public class AddAppointmentController implements Initializable {
                 }
             }
         }
-        // no overlapping appts return false
         return false;
     }
 
+    /**Method to send user input to DBAppointment.addAppointment method to create users appointment
+     *
+     * @param event
+     * <p><b>
+     * Lambda loadMainScreen.mainScreen() is used in this method to reduce code clutter for loading back to the mainScreen.
+     * </b></p>
+     */
     @FXML
     void saveButtonClicked(ActionEvent event) {
 
@@ -177,10 +214,7 @@ public class AddAppointmentController implements Initializable {
         Timestamp startStamp = Timestamp.valueOf(start);
         Timestamp endStamp = Timestamp.valueOf(end);
 
-        System.out.println(checkAppointmentOverlap(aList, customerID, startStamp, endStamp));
-        System.out.println(startDate.getValue());
-        System.out.println(endDate.getValue());
-
+        // checks if anything fields are not filled out and displays error message to user
         if (titleText.getText() == null || descriptionText.getText() == null || locationText.getText() == null || typeText.getText() == null
                 || startDate.getValue() == null || endDate.getValue() == null || startTimeCombo.getValue() == null || endTimeCombo.getValue() == null
                 || customerIDCombo.getValue() == null || userIDCombo.getValue() == null || contactIDCombo.getValue() == null) {
@@ -191,6 +225,7 @@ public class AddAppointmentController implements Initializable {
             alert.showAndWait();
 
         }
+        // checks to make sure user did not schedule an appointment on a weekend
         else if (startDate.getValue().getDayOfWeek() == DayOfWeek.SATURDAY || startDate.getValue().getDayOfWeek() == DayOfWeek.SUNDAY
                 || endDate.getValue().getDayOfWeek() == DayOfWeek.SATURDAY || endDate.getValue().getDayOfWeek() == DayOfWeek.SUNDAY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -199,6 +234,7 @@ public class AddAppointmentController implements Initializable {
             alert.setContentText("Cannot add appointments on the weekend");
             alert.showAndWait();
         }
+        // sends input data to check for possible appointment overlap
         else if (checkAppointmentOverlap(aList, customerID, startStamp, endStamp)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error adding appointment");
@@ -206,6 +242,8 @@ public class AddAppointmentController implements Initializable {
             alert.setContentText("Customer has an overlapping appointment, change date or time");
             alert.showAndWait();
         }
+        // if all checks are passed, sends user input to DBAppointments.addAppointment to be added into the database
+        // and then closes the page and loads the main screen using the lambda
         else {
             try {
                 DBAppointments.addAppointment(title, description, location, type, startStamp, endStamp, customerID.getCustomerID(), userID.getUserID(), contactID.getContactID());
@@ -213,6 +251,7 @@ public class AddAppointmentController implements Initializable {
                 Stage stage = (Stage) cancelButton.getScene().getWindow();
                 stage.close();
 
+                // runs lambda to load mainScreen
                 loadMainScreen.mainScreen();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -6,8 +6,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**Class to check if a user supplied username and password are valid.
+ *
+ */
 public class DBLogin {
 
+    /**Method to check the users table if username and password are valid. Returns true if username and password match
+     *
+     * @param username Username
+     * @param password Password
+     * @return goodLogin boolean
+     */
     public static boolean goodLogin(String username, String password) {
         boolean goodLogin = false;
 

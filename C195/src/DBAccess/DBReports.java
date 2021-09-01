@@ -10,8 +10,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/**Class that makes SQL calls to various tables to display reports.
+ *
+ */
 public class DBReports {
 
+    /**Method to show appointments seperated by type and month.
+     *
+     * @return Returns ObservableList rList
+     */
     public static ObservableList<Reports> getTypeMonth() {
         ObservableList<Reports> rList = FXCollections.observableArrayList();
 
@@ -38,6 +45,10 @@ public class DBReports {
         return rList;
     }
 
+    /**Method to show schedules for all existing contacts.
+     *
+     * @return Returns ObservableList rList
+     */
     public static ObservableList<Reports> getContactSchedules() {
         ObservableList<Reports> rList = FXCollections.observableArrayList();
 
@@ -72,6 +83,10 @@ public class DBReports {
         return rList;
     }
 
+    /**Method to get all emails for existing contacts.
+     *
+     * @return ObservableList rList
+     */
     public static ObservableList<Reports> getContactEmails() {
         ObservableList<Reports> rList = FXCollections.observableArrayList();
 

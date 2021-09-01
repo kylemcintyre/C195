@@ -7,8 +7,15 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.time.LocalDateTime;
 
+/** Class that selects all from the countries table.
+ *
+ */
 public class DBCountries {
 
+    /**Method that selects all from the countries table using SQL.
+     *
+     * @return Returns ObservableList clist
+     */
     public static ObservableList<Countries> getAllCountries() {
         ObservableList<Countries> clist = FXCollections.observableArrayList();
 

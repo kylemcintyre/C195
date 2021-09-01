@@ -5,6 +5,9 @@ import javafx.collections.ObservableList;
 
 import java.time.LocalDateTime;
 
+/**Class that gets and sets customer variables and creates Customer objects.
+ *
+ */
 public class Customers {
     private int customerID;
     private String customerName;
@@ -22,6 +25,16 @@ public class Customers {
 
     private static ObservableList<Customers> customers = FXCollections.observableArrayList();
 
+    /**Method to create Customer objects.
+     *
+     * @param customerID
+     * @param customerName
+     * @param address
+     * @param postalCode
+     * @param country
+     * @param phone
+     * @param divisionID
+     */
     public Customers(int customerID, String customerName, String address, String postalCode, String country, String phone, int divisionID) {
         this.customerID = customerID;
         this.customerName = customerName;
