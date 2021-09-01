@@ -4,6 +4,7 @@ import DBAccess.DBAppointments;
 import DBAccess.DBContacts;
 import DBAccess.DBCustomers;
 import DBAccess.DBUsers;
+import Model.Appointments;
 import Model.Contacts;
 import Model.Customers;
 import Model.Users;
@@ -19,12 +20,17 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.SimpleTimeZone;
 
 public class AddAppointmentController implements Initializable {
 
@@ -76,14 +82,28 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private Label textLabel;
 
-    //ObservableList<Users> users = Users.getUsers();
-    //ObservableList<Contacts> contacts = Contacts.getContacts();
+    public static Appointments customerAppointments;
+
+    // lamba to load the main screen of the program which is used several times
+    // throughout the program. This lambda is saving a lot of duplicate code
+    // from being written
+    MainScreenController.loadMainScreen loadMainScreen = () -> {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
+        Parent root1 = (Parent) fxmlLoader.load();
+        Stage stage2 = new Stage();
+        stage2.setScene(new Scene(root1));
+        stage2.show();
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         startDate.setValue(LocalDate.now());
         endDate.setValue(LocalDate.now());
+        startTimeCombo.setValue("08:00");
+        endTimeCombo.setValue("09:00");
 
         Customers.setCustomers(DBCustomers.getAllCustomers());
         customerIDCombo.setItems(Customers.getCustomers());
@@ -116,15 +136,29 @@ public class AddAppointmentController implements Initializable {
             stage.close();
 
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
-                Parent root1 = (Parent) fxmlLoader.load();
-                Stage stage2 = new Stage();
-                stage2.setScene(new Scene(root1));
-                stage2.show();
+                loadMainScreen.mainScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean checkAppointmentOverlap(ObservableList<Appointments> appointments, Customers customerID,
+                                           Timestamp startStamp, Timestamp endStamp) {
+        // checks for overlapping appointments for the selected customer and returns true starttimes match
+        for (Appointments a : appointments) {
+            if (a.getCustomerID() == customerID.getCustomerID()) {
+                //System.out.println(a.getCustomerID());
+                //System.out.println(customerID.getCustomerID());
+                if (a.getStart().before(endStamp) && a.getEnd().after(startStamp)) {
+                    //System.out.println(a.getStart());
+                    //System.out.println(a.getEnd());
+                    return true;
+                }
+            }
+        }
+        // no overlapping appts return false
+        return false;
     }
 
     @FXML
@@ -139,23 +173,52 @@ public class AddAppointmentController implements Initializable {
         Customers customerID = customerIDCombo.getValue();
         Users userID = userIDCombo.getValue();
         Contacts contactID = contactIDCombo.getValue();
+        ObservableList<Appointments> aList = DBAppointments.getAllAppointments();
         Timestamp startStamp = Timestamp.valueOf(start);
         Timestamp endStamp = Timestamp.valueOf(end);
 
-        DBAppointments.addAppointment(title, description, location, type, startStamp, endStamp, customerID.getCustomerID(), userID.getUserID(), contactID.getContactID());
+        System.out.println(checkAppointmentOverlap(aList, customerID, startStamp, endStamp));
+        System.out.println(startDate.getValue());
+        System.out.println(endDate.getValue());
 
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
+        if (titleText.getText() == null || descriptionText.getText() == null || locationText.getText() == null || typeText.getText() == null
+                || startDate.getValue() == null || endDate.getValue() == null || startTimeCombo.getValue() == null || endTimeCombo.getValue() == null
+                || customerIDCombo.getValue() == null || userIDCombo.getValue() == null || contactIDCombo.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding appointment");
+            alert.setHeaderText("Input data missing");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
 
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage2 = new Stage();
-            stage2.setScene(new Scene(root1));
-            stage2.show();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        else if (startDate.getValue().getDayOfWeek() == DayOfWeek.SATURDAY || startDate.getValue().getDayOfWeek() == DayOfWeek.SUNDAY
+                || endDate.getValue().getDayOfWeek() == DayOfWeek.SATURDAY || endDate.getValue().getDayOfWeek() == DayOfWeek.SUNDAY) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding appointment");
+            alert.setHeaderText("Outside business hours");
+            alert.setContentText("Cannot add appointments on the weekend");
+            alert.showAndWait();
+        }
+        else if (checkAppointmentOverlap(aList, customerID, startStamp, endStamp)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding appointment");
+            alert.setHeaderText("Overlapping appointment");
+            alert.setContentText("Customer has an overlapping appointment, change date or time");
+            alert.showAndWait();
+        }
+        else {
+            try {
+                DBAppointments.addAppointment(title, description, location, type, startStamp, endStamp, customerID.getCustomerID(), userID.getUserID(), contactID.getContactID());
+
+                Stage stage = (Stage) cancelButton.getScene().getWindow();
+                stage.close();
+
+                loadMainScreen.mainScreen();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

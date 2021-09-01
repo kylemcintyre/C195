@@ -1,14 +1,9 @@
 package Model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-public class Appointments {
+public class Reports {
+
     private int appointmentID;
     private String title;
     private String description;
@@ -16,36 +11,42 @@ public class Appointments {
     private String type;
     private Timestamp start;
     private Timestamp end;
-    private Timestamp createDate;
-    private String createdBy;
-    private Timestamp lastUpdate;
-    private String lastUpdateBy;
     private int customerID;
     private int userID;
     private int contactID;
     private String customerName;
     private String contactName;
     private String userName;
+    private String month;
+    private int monthInt;
+    private int customerAppointments;
+    private String country;
+    private String contactEmail;
 
-    private static ObservableList<Appointments> appointments = FXCollections.observableArrayList();
 
-    public Appointments(int appointmentID, String title, String description, String location, String type,
-                        Timestamp start, Timestamp end, int customerID, String customerName, int userID,
-                        String userName, int contactID, String contactName) {
+    public Reports(String type, String month, int monthInt, int customerAppointments) {
+        this.type = type;
+        this.month = month;
+        this.monthInt = monthInt;
+        this.customerAppointments = customerAppointments;
+    }
+
+    public Reports(int appointmentID, String title, String type, String description, Timestamp start, Timestamp end, int customerID, String customerName, int ContactID, String contactName) {
         this.appointmentID = appointmentID;
         this.title = title;
         this.description = description;
-        this.location = location;
         this.type = type;
         this.start = start;
         this.end = end;
         this.customerID = customerID;
         this.customerName = customerName;
-        this.userID = userID;
-        this.userName = userName;
         this.contactID = contactID;
         this.contactName = contactName;
+    }
 
+    public Reports(String contactName, String contactEmail) {
+        this.contactName = contactName;
+        this.contactEmail = contactEmail;
     }
 
     public int getAppointmentID() {
@@ -104,38 +105,6 @@ public class Appointments {
         this.end = end;
     }
 
-    public Timestamp getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Timestamp createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Timestamp lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public String getLastUpdateBy() {
-        return lastUpdateBy;
-    }
-
-    public void setLastUpdateBy(String lastUpdateBy) {
-        this.lastUpdateBy = lastUpdateBy;
-    }
-
     public int getCustomerID() {
         return customerID;
     }
@@ -160,53 +129,67 @@ public class Appointments {
         this.contactID = contactID;
     }
 
-    public String getCustomer() {
+    public String getCustomerName() {
         return customerName;
     }
 
-    public void setCustomer(String customer) {
+    public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
 
-    public String getContact() {
+    public String getContactName() {
         return contactName;
     }
 
-    public void setContact(String contact) {
+    public void setContactName(String contactName) {
         this.contactName = contactName;
     }
 
-    public String getUser() {
+    public String getUserName() {
         return userName;
     }
 
-    public void setUser(String user) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    public static ObservableList<Appointments> getAppointments() {
-        return appointments;
+    public String getMonth() {
+        return month;
     }
 
-    public static void setAppointments(ObservableList<Appointments> appointments) {
-        Appointments.appointments = appointments;
+    public void setMonth(String month) {
+        this.month = month;
     }
 
-    public LocalDate getStartDate (Timestamp startDate) {
-        String startDateString = startDate.toString();
-        LocalDate startLocalDate = LocalDate.parse(startDateString);
-        return startLocalDate;
+    public int getMonthInt() {
+        return monthInt;
     }
 
-    public String getCustomerString() {
-        return customerName + " [" + customerID + "]";
+    public void setMonthInt(int monthInt) {
+        this.monthInt = monthInt;
     }
 
-    public String getUserString() {
-        return userName + " [" + userID + "]";
+    public int getCustomerAppointments() {
+        return customerAppointments;
     }
 
-    public String getContactString() {
-        return contactName + " [" + contactID + "]";
+    public void setCustomerAppointments(int customerAppointments) {
+        this.customerAppointments = customerAppointments;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
     }
 }

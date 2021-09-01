@@ -9,8 +9,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**Class that gets contact information from contacts table with SQL.
+ *
+ */
 public class DBContacts {
 
+    /**Selects contactID and contactName from contacts table.
+     *
+     * @return Returns ObservableList contacts
+     */
     public static ObservableList<Contacts> getContacts() {
         ObservableList<Contacts> contacts = FXCollections.observableArrayList();
 

@@ -22,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -159,6 +160,16 @@ public class MainScreenController implements Initializable {
 
         customerTable.setItems(DBCustomers.getAllCustomers());
         customerTable.refresh();
+    }
+
+    @FunctionalInterface
+    public interface getMessage {
+        public void message();
+    }
+
+    @FunctionalInterface
+    public interface loadMainScreen {
+        public void mainScreen() throws IOException;
     }
 
     @FXML
@@ -301,14 +312,14 @@ public class MainScreenController implements Initializable {
         // launch update appointment window
         try {
             appointmentToModify = appointmentsTable.getSelectionModel().getSelectedItem();
-            System.out.println(appointmentToModify.getAppointmentID());
+            /*System.out.println(appointmentToModify.getAppointmentID());
             System.out.println(appointmentToModify.getTitle());
             System.out.println(appointmentToModify.getDescription());
             System.out.println(appointmentToModify.getLocation());
             System.out.println(appointmentToModify.getType());
             System.out.println(appointmentToModify.getCustomer());
             System.out.println(appointmentToModify.getUserID());
-            System.out.println(appointmentToModify.getContactID());
+            System.out.println(appointmentToModify.getContactID());*/
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UpdateAppointment.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();

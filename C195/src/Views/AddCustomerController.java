@@ -75,6 +75,17 @@ public class AddCustomerController implements Initializable {
     @FXML
     private Button cancelButton;
 
+    // lamba to load the main screen of the program which is used several times
+    // throughout the program. This lambda is saving a lot of duplicate code
+    // from being written
+    MainScreenController.loadMainScreen loadMainScreen = () -> {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
+        Parent root1 = (Parent) fxmlLoader.load();
+        Stage stage2 = new Stage();
+        stage2.setScene(new Scene(root1));
+        stage2.show();
+    };
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -293,11 +304,7 @@ public class AddCustomerController implements Initializable {
         }
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage2 = new Stage();
-            stage2.setScene(new Scene(root1));
-            stage2.show();
+            loadMainScreen.mainScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

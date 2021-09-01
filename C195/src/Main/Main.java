@@ -16,8 +16,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**Main class that first loads when the program is run. Opens the Login page.*/
 public class Main extends Application {
 
+    /**Method that provides the location for the Login.fxml file to load. */
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
@@ -31,16 +33,10 @@ public class Main extends Application {
         }
     }
 
-
+    /**Main method that runs when application is launched. Connects application to database upon loading using DBConnection.startConnection().*/
     public static void main(String[] args) throws SQLException {
         Connection conn = DBConnection.startConnection();
         DBQuery.setStatement(conn);
-
-        LocalDateTime localDateTime = LocalDateTime.now();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String formattedLocalDateTime = localDateTime.format(dtf);
-        System.out.println(formattedLocalDateTime);
-
         launch(args);
         DBConnection.closeConnection();
     }

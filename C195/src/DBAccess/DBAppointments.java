@@ -13,10 +13,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/** This class contains methods that connect to the database and run SQL code for appointments. */
 public class DBAppointments {
 
     public static ObservableList<Appointments> alist;
 
+    /**Method that runs SQL on the database to select all appointment information for the appointment table.
+     * @return Returns ObservableList alist*/
     public static ObservableList<Appointments> getAllAppointments() {
         ObservableList<Appointments> alist = FXCollections.observableArrayList();
 
@@ -56,6 +59,8 @@ public class DBAppointments {
         return alist;
     }
 
+    /**Method that runs SQL on the database to select weekly appointment information for the appointment table.
+     * @return Returns ObservableList alist*/
     public static ObservableList<Appointments> getWeeklyAppointments() {
         ObservableList<Appointments> alist = FXCollections.observableArrayList();
 
@@ -98,6 +103,8 @@ public class DBAppointments {
         return alist;
     }
 
+    /**Method that runs SQL on the database to select monthly appointment information for the appointment table.
+     * @return Returns ObservableList alist*/
     public static ObservableList<Appointments> getMonthlyAppointments() {
         ObservableList<Appointments> alist = FXCollections.observableArrayList();
 
@@ -140,6 +147,35 @@ public class DBAppointments {
         return alist;
     }
 
+    /**Method that runs SQL on the database to select all appointment information for the appointment table for a matching customerID.
+     * @param customerID Supplied int for customerID
+     * @return Returns ObservableList alist*/
+    public static ObservableList<Appointments> getCustomerAppointments(int customerID) {
+        ObservableList<Appointments> alist = FXCollections.observableArrayList();
+
+        try {
+            String sql = "SELECT * FROM Appointments WHERE Customer_ID = ?";
+
+
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+            ps.setInt(1, customerID);
+        } catch (Exception e) {
+            //
+        }
+        return alist;
+    }
+
+    /**Method that runs SQL on the database to add a new appointment to the appointment table.
+     * @param title Title for the appointment
+     * @param description Description for the appointment
+     * @param location Location for the appointment
+     * @param type Type of appointment
+     * @param start Start date and time of the appointment
+     * @param end End date and time of the appointment
+     * @param customerID CustomerID for the appointment
+     * @param userID UserID for the appointment
+     * @param contactID ContactID for the appointment
+     * @return Returns ObservableList alist*/
     public static void addAppointment(String title, String description, String location, String type, Timestamp start, Timestamp end, int customerID, int userID, int contactID) {
 
         try {
@@ -162,6 +198,17 @@ public class DBAppointments {
         }
     }
 
+    /**Method that runs SQL on the database to update an existing appointment to the appointment table.
+     * @param title Title for the appointment
+     * @param description Description for the appointment
+     * @param location Location for the appointment
+     * @param type Type of appointment
+     * @param start Start date and time of the appointment
+     * @param end End date and time of the appointment
+     * @param customerID CustomerID for the appointment
+     * @param userID UserID for the appointment
+     * @param contactID ContactID for the appointment
+     * @return Returns ObservableList alist*/
     public static void updateAppointment(int appointmentID, String title, String description, String location, String type,
                                          Timestamp start, Timestamp end, int customerID, int userID, int contactID) {
         try {
@@ -186,6 +233,8 @@ public class DBAppointments {
         }
     }
 
+    /**Method that runs SQL on the database to delete the appointment that matches the param appointmentID.
+     * @param appointmentID Supplied int for appointmentID */
     public static void deleteAppointment(int appointmentID) {
         try {
             String sql = "DELETE FROM appointments WHERE Appointment_ID = ?;";

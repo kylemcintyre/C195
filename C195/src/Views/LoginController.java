@@ -2,6 +2,7 @@ package Views;
 
 import DBAccess.DBAppointments;
 import DBAccess.DBLogin;
+import Main.Main;
 import Model.Appointments;
 import Utilities.DBConnection;
 import javafx.collections.ObservableList;
@@ -60,31 +61,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //Locale.setDefault(new Locale("fr"));
-        //TimeZone.setDefault(TimeZone.getTimeZone("Europe/France"));
-        //TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
-        //TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
-
-        ZoneId currentZoneID = ZoneId.of(TimeZone.getDefault().getID());
-
-        ZonedDateTime currentTimeZone = ZonedDateTime.of(LocalDateTime.now().toLocalDate(), LocalDateTime.now().toLocalTime(), currentZoneID);
-
-        Instant currentUTC = currentTimeZone.toInstant();
-
-        ZonedDateTime utcEST = currentTimeZone.withZoneSameInstant(ZoneId.of("America/New_York"));
-
-        ZonedDateTime utcLocal = currentUTC.atZone(currentZoneID);
-
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        timeDifference = utcLocal.getHour() - utcEST.getHour();
-        startTime += timeDifference;
-        endTime += timeDifference;
-        if (timeDifference > 2) {
-            endTime -= 24;
-        } else if (timeDifference < -8) {
-            startTime += 24;
-        }
 
         if (Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")) {
             try {
@@ -137,6 +114,26 @@ public class LoginController implements Initializable {
         pw.println(dtf.format(currentDateTime) + " Username:" + userName + " Login:" + goodLogin);
         pw.close();
 
+        // lambda to display alert that there are no upcomming appointments
+        MainScreenController.getMessage noAppointments = () -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Appointments");
+            alert.setHeaderText("No upcomming appointments");
+            alert.setContentText("No upcomming appointments");
+            alert.showAndWait();
+        };
+
+        // lamba to load the main screen of the program which is used several times
+        // throughout the program. This lambda is saving a lot of duplicate code
+        // from being written
+        MainScreenController.loadMainScreen loadMainScreen = () -> {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage2 = new Stage();
+            stage2.setScene(new Scene(root1));
+            stage2.show();
+        };
+
         if (goodLogin) {
 
             if(rs.next()) {
@@ -152,21 +149,13 @@ public class LoginController implements Initializable {
                 alert.showAndWait();
             }
             else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Appointments");
-                alert.setHeaderText("No Upcoming Appointments");
-                alert.setContentText("No Upcoming Appointments");
-                alert.showAndWait();
+                noAppointments.message();
             }
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
-                Parent root1 = (Parent) fxmlLoader.load();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root1));
-                stage.show();
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                stage.close();
 
-                Stage stage2 = (Stage) loginButton.getScene().getWindow();
-                stage2.close();
+                loadMainScreen.mainScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
