@@ -19,7 +19,11 @@ import java.time.format.DateTimeFormatter;
 /**Main class that first loads when the program is run. Opens the Login page.*/
 public class Main extends Application {
 
-    /**Method that provides the location for the Login.fxml file to load. */
+    /**Method that provides the location for the Login.fxml file to load.
+     *
+     * @param primaryStage state to load
+     * @throws Exception throws exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
@@ -33,7 +37,11 @@ public class Main extends Application {
         }
     }
 
-    /**Main method that runs when application is launched. Connects application to database upon loading using DBConnection.startConnection().*/
+    /**Main method that runs when application is launched. Connects application to database upon loading using DBConnection.startConnection().
+     *
+     * @param args args
+     * @throws SQLException exception
+     */
     public static void main(String[] args) throws SQLException {
         Connection conn = DBConnection.startConnection();
         DBQuery.setStatement(conn);

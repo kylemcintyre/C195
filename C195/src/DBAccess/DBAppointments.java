@@ -215,6 +215,7 @@ public class DBAppointments {
     }
 
     /**Method that runs SQL on the database to update an existing appointment to the appointment table.
+     * @param appointmentID AppointmentID for the appointment
      * @param title Title for the appointment
      * @param description Description for the appointment
      * @param location Location for the appointment

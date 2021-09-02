@@ -13,8 +13,8 @@ public class DBQuery {
 
     /**Method to setStatement for Connection conn.
      *
-     * @param conn
-     * @throws SQLException
+     * @param conn Connection object
+     * @throws SQLException throws exception
      */
     public static void setStatement(Connection conn) throws SQLException {
         statement = conn.createStatement();
