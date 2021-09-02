@@ -22,6 +22,7 @@ public class DBConnection {
     private static final String MYSQLJDBCDriver = "com.mysql.cj.jdbc.Driver";
     private static Connection conn = null;
 
+    // my username and password to connect to the database
     private static final String username = "U07jFq"; // Username
     private static final String password = "53689046315"; // Password
 
@@ -31,6 +32,7 @@ public class DBConnection {
      */
     public static Connection startConnection() {
         try {
+            // connects to database by building connection object conn
             Class.forName(MYSQLJDBCDriver);
             conn = DriverManager.getConnection(jdbcURL, username, password);
             System.out.println("Connection Successful");
@@ -43,7 +45,7 @@ public class DBConnection {
         return conn;
     }
 
-    /**Method to reistablish database connection.
+    /**Method to reestablish database connection.
      *
      * @return Returns DriverManager connection conn
      */
@@ -56,6 +58,7 @@ public class DBConnection {
      */
     public static void closeConnection() {
 
+        // closes connection and prints out
         try {
             conn.close();
             System.out.println("Connection Closed");

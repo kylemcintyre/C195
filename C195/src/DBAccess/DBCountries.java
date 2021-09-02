@@ -20,25 +20,27 @@ public class DBCountries {
         ObservableList<Countries> clist = FXCollections.observableArrayList();
 
         try {
+
+            // sql query to get all countries
             String sql = "SELECT * from countries";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
 
+            // scan through resultset and set variables
             while (rs.next()) {
                 int countryID = rs.getInt("Country_ID");
                 String countryName = rs.getString("Country");
 
+                // add variables to Countries object and add to clist
                 Countries C = new Countries(countryID, countryName);
                 clist.add(C);
             }
         }
-
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
+        catch (SQLException e) {
+            e.printStackTrace();
         }
-
         return clist;
     }
 }

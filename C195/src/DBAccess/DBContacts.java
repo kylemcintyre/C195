@@ -22,11 +22,14 @@ public class DBContacts {
         ObservableList<Contacts> contacts = FXCollections.observableArrayList();
 
         try {
+
+            // sql query to select contactID and contactName
             String sql = "SELECT Contact_ID, Contact_Name FROM contacts ORDER BY Contact_ID;";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                // sets variables and adds them to contacts ObservableList
                 int contactID = rs.getInt("Contact_ID");
                 String contactName = rs.getString("Contact_Name");
                 Contacts contact = new Contacts(contactID, contactName);

@@ -22,6 +22,9 @@ import java.util.Hashtable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**Class to handle all logic for the AddCustomer fxml page.
+ *
+ */
 public class AddCustomerController implements Initializable {
 
     @FXML
@@ -75,7 +78,7 @@ public class AddCustomerController implements Initializable {
     @FXML
     private Button cancelButton;
 
-    // lamba to load the main screen of the program which is used several times
+    // lambda to load the main screen of the program which is used several times
     // throughout the program. This lambda is saving a lot of duplicate code
     // from being written
     MainScreenController.loadMainScreen loadMainScreen = () -> {
@@ -86,16 +89,27 @@ public class AddCustomerController implements Initializable {
         stage2.show();
     };
 
+    /**Method that is initialized when class is loaded.
+     * Sets countyCombo with array with countries.
+     * @param location URL
+     * @param resources ResourceBundle
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        // sets countryCombo with countries array
         String countries[] = { "U.S", "UK", "Canada"};
         countryCombo.setItems(FXCollections.observableArrayList(countries));
     }
 
+    /**Method that sets stateCombo box with appropriate states depending on what country is selected.
+     *
+     * @param event Performs action to load stateCombo with appropriate states when countryCombo is interacted with.
+     */
     @FXML
     void setStates(ActionEvent event) {
 
+        // array for U.S states
         String usStates[] = {
                 "Alaska",
                 "Alabama",
@@ -149,6 +163,8 @@ public class AddCustomerController implements Initializable {
                 "Wisconsin",
                 "West Virginia",
                 "Wyoming" };
+
+        // array for Canada states
         String canadaStates[] = {
                 "Northwest Territories",
                 "Alberta",
@@ -163,8 +179,11 @@ public class AddCustomerController implements Initializable {
                 "Nunavut",
                 "Yukon",
                 "Newfoundland and Labrador" };
+
+        // array for UK states
         String ukStates[] = { "England", "Wales", "Scotland", "Ireland" };
 
+        // sets stateCombo with appropriate array depending on value selected in countryCombo
         if (countryCombo.getValue() == "U.S") {
             stateCombo.setItems(FXCollections.observableArrayList(usStates));
         }
@@ -176,8 +195,17 @@ public class AddCustomerController implements Initializable {
         }
     }
 
+    /**Method to go back to mainScreen when the cancel button is clicked.
+     *
+     * @param event Performs action when cancel button is clicked
+     * <p><b>
+     * Lambda loadMainScreen.mainScreen() is used in this method to reduce code clutter for loading back to the mainScreen.
+     * </b></p>
+     */
     @FXML
     void cancelButtonClicked(ActionEvent event) {
+
+        // confirmation alert asking if the user is sure they want to cancel
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Cancel");
         alert.setHeaderText(null);
@@ -188,16 +216,14 @@ public class AddCustomerController implements Initializable {
         alert.getDialogPane().lookupButton(buttonTypeCancel).setVisible(true);
         Optional<ButtonType> result = alert.showAndWait();
 
+        // if user clicks yes, closes current window and loads mainScreen
         if (result.get() == buttonTypeOne) {
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.close();
 
+            // runs lambda to load mainScreen
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/MainScreen.fxml"));
-                Parent root1 = (Parent) fxmlLoader.load();
-                Stage stage2 = new Stage();
-                stage2.setScene(new Scene(root1));
-                stage2.show();
+                loadMainScreen.mainScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -205,14 +231,23 @@ public class AddCustomerController implements Initializable {
 
     }
 
+    /**Method to send user input to DBCustomers.addCustomer when save clicked.
+     *
+     * @param event Performs action when the saveButton is clicked
+     * <p><b>
+     * Lambda loadMainScreen.mainScreen() is used in this method to reduce code clutter for loading back to the mainScreen.
+     * </b></p>
+     */
     @FXML
     void saveButtonClicked(ActionEvent event) {
 
+        // creates hashtable with country and corresponding countryID
         Hashtable<String, Integer> countryDict = new Hashtable<String, Integer>();
         countryDict.put("U.S", 1);
         countryDict.put("UK", 2);
         countryDict.put("Canada", 3);
 
+        // creates hashtable with state and corresponding divisionID
         Hashtable<String, Integer> stateDict = new Hashtable<String, Integer>();
         stateDict.put("Alabama", 1);
         stateDict.put("Arizona", 2);
@@ -283,6 +318,7 @@ public class AddCustomerController implements Initializable {
         stateDict.put("Scotland", 103);
         stateDict.put("Northern Ireland", 104);
 
+        // stores input from user in variables
         String customerName = customerNameText.getText();
         String address = addressText.getText();
         String postalCode = postalCodeText.getText();
@@ -290,26 +326,28 @@ public class AddCustomerController implements Initializable {
         int divisionID = stateDict.get(stateCombo.getValue());
         int countryID = countryDict.get(countryCombo.getValue());
 
-        try {
-            DBCustomers.addCustomer(customerName, address, postalCode, phoneNumber, divisionID);
-
-            Stage stage = (Stage) cancelButton.getScene().getWindow();
-            stage.close();
-        } catch(Exception e) {
+        // checks if any fields are not filled out and displays error message to user
+        if (customerName.equals("") || address.equals("") || postalCode.equals("") || phoneNumber.equals("") || countryCombo.getValue() == null || stateCombo.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.setTitle("Please fill out all forms");
-            alert.setHeaderText("All forms must be filled out");
+            alert.setTitle("Error adding customer");
+            alert.setHeaderText("Input data missing");
+            alert.setContentText("Please fill out all fields");
             alert.showAndWait();
         }
+        // if all checks are passed, sends user input to DBCustomers.addCustomer to be added into the database
+        // and then closes the page and loads the main screen using the lambda
+        else {
+            try {
+                DBCustomers.addCustomer(customerName, address, postalCode, phoneNumber, divisionID);
 
-        try {
-            loadMainScreen.mainScreen();
-        } catch (Exception e) {
-            e.printStackTrace();
+                Stage stage = (Stage) cancelButton.getScene().getWindow();
+                stage.close();
+
+                // runs lambda to load mainScreen
+                loadMainScreen.mainScreen();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
-
-
     }
-
 }

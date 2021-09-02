@@ -34,19 +34,19 @@ public class Appointments {
 
     /**Method to create Appointment objects
      *
-     * @param appointmentID
-     * @param title
-     * @param description
-     * @param location
-     * @param type
-     * @param start
-     * @param end
-     * @param customerID
-     * @param customerName
-     * @param userID
-     * @param userName
-     * @param contactID
-     * @param contactName
+     * @param appointmentID int
+     * @param title String
+     * @param description String
+     * @param location String
+     * @param type String
+     * @param start Timestamp
+     * @param end Timestamp
+     * @param customerID int
+     * @param customerName String
+     * @param userID int
+     * @param userName String
+     * @param contactID int
+     * @param contactName String
      */
     public Appointments(int appointmentID, String title, String description, String location, String type,
                         Timestamp start, Timestamp end, int customerID, String customerName, int userID,

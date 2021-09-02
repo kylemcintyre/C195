@@ -21,85 +21,27 @@ public class DBDivisions {
     public static ObservableList<Divisions> getDivisions() {
         ObservableList<Divisions> dList = FXCollections.observableArrayList();
 
+        // sql query to get divisions from countries and first_level_divisions tables
         try {
             String sql = "SELECT Division_ID, Division, first_level_divisions.Country_ID, countries.Country FROM " +
                     "first_level_divisions, countries WHERE countries.Country_ID = first_level_divisions.Country_ID;";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
+            // scan through resultset and set variables
             while (rs.next()) {
                 int divisionID = rs.getInt("Division_ID");
                 String division = rs.getString("Division");
                 int countryId = rs.getInt("Country_ID");
                 String country = rs.getString("Country");
 
+                // create new Divisions object with variables and add to dlist
                 Divisions divisions = new Divisions(divisionID, division, countryId, country);
                 dList.add(divisions);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return dList;
-    }
-
-    /**Method to get the divisions for a specific country.
-     *
-     * @param countryID CountryID
-     * @return Returns ObservableList dList
-     */
-    public static ObservableList<Divisions> getDivisionsByCountry(int countryID) {
-        ObservableList<Divisions> dList = FXCollections.observableArrayList();
-
-        try {
-            String sql = "SELECT Division_ID, Division, first_level_divisions.Country_ID, countries.Country FROM " +
-                    "first_level_divisions, countries WHERE first_level_divisions.Country_ID = countries.Country_ID " +
-                    "AND first_level_divisions.Country_ID = ?;";
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-            ps.setInt(1, countryID);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                int divisionId = rs.getInt("Division_ID");
-                String division = rs.getString("Division");
-                int countryId = rs.getInt("Country_ID");
-                String country = rs.getString("Country");
-
-                Divisions divisions = new Divisions(divisionId, division, countryId, country);
-                dList.add(divisions);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return dList;
-    }
-
-    /**Method that gets divisions by their divisionID.
-     *
-     * @param divisionNum DivisionID
-     * @return Returns Divisions object divisions
-     */
-    public static Divisions getDivisionByID(int divisionNum) {
-        Divisions divisions = null;
-
-        try {
-            String sql = "SELECT Division_ID, Division, Country_ID FROM first_level_divisions WHERE Division_ID = ?;";
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-            ps.setInt(1, divisionNum);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                int divisionID = rs.getInt("Division_ID");
-                String division = rs.getString("Division");
-                int countryID = rs.getInt("Country_ID");
-                String country = null;
-
-                divisions = new Divisions(divisionID, division, countryID, country);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return divisions;
     }
 }

@@ -17,10 +17,10 @@ public class Divisions {
 
     /**Method to create Division objects.
      *
-     * @param divisionID
-     * @param division
-     * @param countryID
-     * @param countryName
+     * @param divisionID int
+     * @param division String
+     * @param countryID int
+     * @param countryName String
      */
     public Divisions(int divisionID, String division, int countryID, String countryName) {
         this.divisionID = divisionID;

@@ -27,13 +27,13 @@ public class Customers {
 
     /**Method to create Customer objects.
      *
-     * @param customerID
-     * @param customerName
-     * @param address
-     * @param postalCode
-     * @param country
-     * @param phone
-     * @param divisionID
+     * @param customerID int
+     * @param customerName String
+     * @param address String
+     * @param postalCode String
+     * @param country String
+     * @param phone String
+     * @param divisionID int
      */
     public Customers(int customerID, String customerName, String address, String postalCode, String country, String phone, int divisionID) {
         this.customerID = customerID;

@@ -18,8 +18,11 @@ public class DBLogin {
      * @return goodLogin boolean
      */
     public static boolean goodLogin(String username, String password) {
+
+        // set boolean variable to default false
         boolean goodLogin = false;
 
+        // sql query to check if username and password match
         try {
             String sql = "SELECT User_Name, Password FROM users WHERE User_Name = ? AND Password = ?;";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
@@ -27,17 +30,16 @@ public class DBLogin {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
 
+            // if username and password match return true
             if (rs.next()) {
                 goodLogin = true;
             }
             else {
                 // do nothing
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return goodLogin;
     }
 }

@@ -21,8 +21,8 @@ public class Countries {
 
     /**Method to create Country objects.
      *
-     * @param countryID
-     * @param countryName
+     * @param countryID int
+     * @param countryName String
      */
     public Countries(int countryID, String countryName) {
         this.countryID = countryID;

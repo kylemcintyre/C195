@@ -15,8 +15,8 @@ public class Users {
 
     /**Method to create User objects.
      *
-     * @param userID
-     * @param username
+     * @param userID int
+     * @param username String
      */
     public Users(int userID, String username) {
         this.userID = userID;

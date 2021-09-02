@@ -29,10 +29,10 @@ public class Reports {
 
     /**Method to create Report object for typeMonth report.
      *
-     * @param type
-     * @param month
-     * @param monthInt
-     * @param customerAppointments
+     * @param type String
+     * @param month String
+     * @param monthInt int
+     * @param customerAppointments int
      */
     public Reports(String type, String month, int monthInt, int customerAppointments) {
         this.type = type;
@@ -43,16 +43,16 @@ public class Reports {
 
     /**Method to create Report object for contactSchedule report.
      *
-     * @param appointmentID
-     * @param title
-     * @param type
-     * @param description
-     * @param start
-     * @param end
-     * @param customerID
-     * @param customerName
-     * @param ContactID
-     * @param contactName
+     * @param appointmentID int
+     * @param title String
+     * @param type String
+     * @param description String
+     * @param start Timestamp
+     * @param end Timestamp
+     * @param customerID int
+     * @param customerName String
+     * @param ContactID int
+     * @param contactName String
      */
     public Reports(int appointmentID, String title, String type, String description, Timestamp start, Timestamp end, int customerID, String customerName, int ContactID, String contactName) {
         this.appointmentID = appointmentID;
@@ -69,8 +69,8 @@ public class Reports {
 
     /**Method to create Report object for contactEmail report.
      *
-     * @param contactName
-     * @param contactEmail
+     * @param contactName String
+     * @param contactEmail String
      */
     public Reports(String contactName, String contactEmail) {
         this.contactName = contactName;

@@ -87,7 +87,7 @@ public class AddAppointmentController implements Initializable {
 
     public static Appointments customerAppointments;
 
-    // lamba to load the main screen of the program which is used several times
+    // lambda to load the main screen of the program which is used several times
     // throughout the program. This lambda is saving a lot of duplicate code
     // from being written
     MainScreenController.loadMainScreen loadMainScreen = () -> {
@@ -100,8 +100,8 @@ public class AddAppointmentController implements Initializable {
 
     /**Method to load data into the AddAppointment fxml file upon load.
      *
-     * @param location
-     * @param resources
+     * @param location URL
+     * @param resources ResourceBundle
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -153,7 +153,7 @@ public class AddAppointmentController implements Initializable {
         alert.getDialogPane().lookupButton(buttonTypeCancel).setVisible(true);
         Optional<ButtonType> result = alert.showAndWait();
 
-        // if user clicks ok to cancel, closes current window and loads mainScreen
+        // if user clicks yes, closes current window and loads mainScreen
         if (result.get() == buttonTypeOne) {
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.close();
@@ -169,21 +169,17 @@ public class AddAppointmentController implements Initializable {
 
     /**Method to check if customer has an overlapping appointment when creating a new appointment or updating an existing one.
      *
-     * @param appointments
-     * @param customerID
-     * @param startStamp
-     * @param endStamp
+     * @param appointments ObservableList Appointments
+     * @param customerID Customers object
+     * @param startStamp Timestamp
+     * @param endStamp Timestamp
      * @return Returns true if an overlapping appointment is found, otherwise returns false
      */
     public boolean checkAppointmentOverlap(ObservableList<Appointments> appointments, Customers customerID,
                                            Timestamp startStamp, Timestamp endStamp) {
         for (Appointments a : appointments) {
             if (a.getCustomerID() == customerID.getCustomerID()) {
-                //System.out.println(a.getCustomerID());
-                //System.out.println(customerID.getCustomerID());
                 if (a.getStart().before(endStamp) && a.getEnd().after(startStamp)) {
-                    //System.out.println(a.getStart());
-                    //System.out.println(a.getEnd());
                     return true;
                 }
             }
@@ -191,7 +187,7 @@ public class AddAppointmentController implements Initializable {
         return false;
     }
 
-    /**Method to send user input to DBAppointment.addAppointment method to create users appointment
+    /**Method to send user input to DBAppointments.addAppointment method to create users appointment.
      *
      * @param event
      * <p><b>
@@ -201,6 +197,7 @@ public class AddAppointmentController implements Initializable {
     @FXML
     void saveButtonClicked(ActionEvent event) {
 
+        // create variables with user input
         String title = titleText.getText();
         String description = descriptionText.getText();
         String location = locationText.getText();
@@ -214,16 +211,15 @@ public class AddAppointmentController implements Initializable {
         Timestamp startStamp = Timestamp.valueOf(start);
         Timestamp endStamp = Timestamp.valueOf(end);
 
-        // checks if anything fields are not filled out and displays error message to user
+        // checks if any fields are not filled out and displays error message to user
         if (titleText.getText() == null || descriptionText.getText() == null || locationText.getText() == null || typeText.getText() == null
                 || startDate.getValue() == null || endDate.getValue() == null || startTimeCombo.getValue() == null || endTimeCombo.getValue() == null
                 || customerIDCombo.getValue() == null || userIDCombo.getValue() == null || contactIDCombo.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error adding appointment");
-            alert.setHeaderText("Input data missing");
+            alert.setHeaderText("Input missing data");
             alert.setContentText("Please fill out all fields");
             alert.showAndWait();
-
         }
         // checks to make sure user did not schedule an appointment on a weekend
         else if (startDate.getValue().getDayOfWeek() == DayOfWeek.SATURDAY || startDate.getValue().getDayOfWeek() == DayOfWeek.SUNDAY

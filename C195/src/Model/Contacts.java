@@ -15,8 +15,8 @@ public class Contacts {
 
     /**Method to create Contact objects.
      *
-     * @param contactID
-     * @param contactName
+     * @param contactID int
+     * @param contactName String
      */
     public Contacts(int contactID, String contactName) {
         this.contactID = contactID;

@@ -19,12 +19,12 @@ public class DBAppointments {
     public static ObservableList<Appointments> alist;
 
     /**Method that runs SQL on the database to select all appointment information for the appointment table.
-     * @return Returns ObservableList alist*/
+     * @return Returns ObservableList alist
+     */
     public static ObservableList<Appointments> getAllAppointments() {
         ObservableList<Appointments> alist = FXCollections.observableArrayList();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
+        // sql query to get appointments
         try {
             String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, " +
                     "appointments.Customer_ID, Customer_Name, appointments.User_ID, User_Name, appointments.Contact_ID, " +
@@ -34,6 +34,7 @@ public class DBAppointments {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
+            // scan through resultset and set variables
             while (rs.next()) {
                 int appointmentID = rs.getInt("Appointment_ID");
                 String title = rs.getString("Title");
@@ -49,6 +50,7 @@ public class DBAppointments {
                 int contactID = rs.getInt("Contact_ID");
                 String contactName = rs.getString("Contact_Name");
 
+                // pass variables to Appointments constructor and add to  alist
                 Appointments A = new Appointments(appointmentID, title, description, location, type, start, end, customerID, customerName, userID, userName, contactID, contactName);
                 alist.add(A);
             }
@@ -60,13 +62,16 @@ public class DBAppointments {
     }
 
     /**Method that runs SQL on the database to select weekly appointment information for the appointment table.
-     * @return Returns ObservableList alist*/
+     * @return Returns ObservableList alist
+     */
     public static ObservableList<Appointments> getWeeklyAppointments() {
         ObservableList<Appointments> alist = FXCollections.observableArrayList();
 
+        // variables used to get the current day plus one week
         LocalDate currentWeek = LocalDate.now();
         LocalDate nextWeek = currentWeek.plusWeeks(1);
 
+        // sql query to get appointments for the current week
         try {
             String sql = "SELECT *, customers.Customer_ID, users.User_ID, contacts.Contact_ID, customers.Customer_Name, contacts.Contact_Name, users.User_Name from appointments, customers, users, contacts" +
                     " WHERE customers.Customer_ID = appointments.Customer_ID AND users.User_ID = appointments.User_ID AND contacts.Contact_ID = appointments.Contact_ID" +
@@ -78,6 +83,7 @@ public class DBAppointments {
 
             ResultSet rs = ps.executeQuery();
 
+            // scan through resultset and set variables
             while (rs.next()) {
                 int appointmentID = rs.getInt("Appointment_ID");
                 String title = rs.getString("Title");
@@ -93,6 +99,7 @@ public class DBAppointments {
                 int contactID = rs.getInt("Contact_ID");
                 String contactName = rs.getString("Contact_Name");
 
+                // pass variables to Appointments constructor and add to alist
                 Appointments A = new Appointments(appointmentID, title, description, location, type, start, end, customerID, customerName, userID, userName, contactID, contactName);
                 alist.add(A);
             }
@@ -104,13 +111,16 @@ public class DBAppointments {
     }
 
     /**Method that runs SQL on the database to select monthly appointment information for the appointment table.
-     * @return Returns ObservableList alist*/
+     * @return Returns ObservableList alist
+     */
     public static ObservableList<Appointments> getMonthlyAppointments() {
         ObservableList<Appointments> alist = FXCollections.observableArrayList();
 
+        // variables to get the current month plus one month
         LocalDate currentMonth = LocalDate.now().withDayOfMonth(1);
         LocalDate nextMonth = currentMonth.plusMonths(1);
 
+        // sql query to get appointments for the current month
         try {
             String sql = "SELECT *, customers.Customer_ID, users.User_ID, contacts.Contact_ID, customers.Customer_Name, contacts.Contact_Name, users.User_Name from appointments, customers, users, contacts" +
                     " WHERE customers.Customer_ID = appointments.Customer_ID AND users.User_ID = appointments.User_ID AND contacts.Contact_ID = appointments.Contact_ID" +
@@ -122,6 +132,7 @@ public class DBAppointments {
 
             ResultSet rs = ps.executeQuery();
 
+            // scan through resultset and set variables
             while (rs.next()) {
                 int appointmentID = rs.getInt("Appointment_ID");
                 String title = rs.getString("Title");
@@ -137,6 +148,7 @@ public class DBAppointments {
                 int contactID = rs.getInt("Contact_ID");
                 String contactName = rs.getString("Contact_Name");
 
+                // pass variables to appointments constructor and add to alist
                 Appointments A = new Appointments(appointmentID, title, description, location, type, start, end, customerID, customerName, userID, userName, contactID, contactName);
                 alist.add(A);
             }
@@ -149,10 +161,12 @@ public class DBAppointments {
 
     /**Method that runs SQL on the database to select all appointment information for the appointment table for a matching customerID.
      * @param customerID Supplied int for customerID
-     * @return Returns ObservableList alist*/
+     * @return Returns ObservableList alist
+     */
     public static ObservableList<Appointments> getCustomerAppointments(int customerID) {
         ObservableList<Appointments> alist = FXCollections.observableArrayList();
 
+        // sql query to get appointments that match customerID
         try {
             String sql = "SELECT * FROM Appointments WHERE Customer_ID = ?";
 
@@ -175,12 +189,14 @@ public class DBAppointments {
      * @param customerID CustomerID for the appointment
      * @param userID UserID for the appointment
      * @param contactID ContactID for the appointment
-     * @return Returns ObservableList alist*/
+     */
     public static void addAppointment(String title, String description, String location, String type, Timestamp start, Timestamp end, int customerID, int userID, int contactID) {
 
+        // sql query to addAppointment to the appointments table
         try {
             String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (NULL,?,?,?,?,?,?,?,?,?);";
 
+            // variables to be set in values
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
             ps.setString(1, title);
             ps.setString(2, description);
@@ -208,13 +224,16 @@ public class DBAppointments {
      * @param customerID CustomerID for the appointment
      * @param userID UserID for the appointment
      * @param contactID ContactID for the appointment
-     * @return Returns ObservableList alist*/
+     */
     public static void updateAppointment(int appointmentID, String title, String description, String location, String type,
                                          Timestamp start, Timestamp end, int customerID, int userID, int contactID) {
+
+        // sql query to update appointment for the matching appointmentID
         try {
             String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, " +
                     "End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?;";
 
+            // variables to be set in values
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
             ps.setString(1, title);
             ps.setString(2, description);
@@ -234,9 +253,12 @@ public class DBAppointments {
     }
 
     /**Method that runs SQL on the database to delete the appointment that matches the param appointmentID.
-     * @param appointmentID Supplied int for appointmentID */
+     * @param appointmentID Supplied int for appointmentID
+     */
     public static void deleteAppointment(int appointmentID) {
         try {
+
+            // sql query to delete appointment with the matching appointmentID
             String sql = "DELETE FROM appointments WHERE Appointment_ID = ?;";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
