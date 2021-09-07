@@ -1,21 +1,5 @@
 -----
 
-	Program and student information
-
-Title - C195
-
-Purpose - A GUI scheduling application built in Java. This application will allow users to login and connect to a MySQL database to create, read, update, and delete appointment, contact, country, customer, division, and user data. There are also various reports that can be ran and read.
-
-Author - Kyle McIntyre
-
-Contact - kmcin43@wgu.edu
-
-Student Application Version - QAM1
-
-Date - 9/2/2021
-
------
-
 	Technology Used
 
 IDE - IntelliJ IDEA 2021.2.1 (Community Edition)
